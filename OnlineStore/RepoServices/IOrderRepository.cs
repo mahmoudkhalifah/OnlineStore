@@ -1,0 +1,13 @@
+﻿using OnlineStore.Models;
+
+namespace OnlineStore.RepoServices
+{
+    public interface IOrderRepository
+    {
+        public List<Order> GetAll();
+        public Order GetDetails(int id);
+        public int Insert(Order order);
+        public int UpdateOrder(int id, Order order);
+        public int DeleteOrder(int id);
+    }
+}

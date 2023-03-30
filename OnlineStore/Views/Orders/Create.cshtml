@@ -1,0 +1,64 @@
+﻿@model OnlineStore.Models.Order
+
+@{
+    ViewData["Title"] = "Create";
+    //var Customers = new SelectList(ViewBag.Customers, "CustomerId", "FullName");
+}
+
+<h1>Create</h1>
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="OrderDate" class="control-label"></label>
+                <input asp-for="OrderDate" class="form-control" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingDate" class="control-label"></label>
+                <input asp-for="ShippingDate" class="form-control" />
+                <span asp-validation-for="ShippingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArrivalDate" class="control-label"></label>
+                <input asp-for="ArrivalDate" class="form-control" />
+                <span asp-validation-for="ArrivalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Bill" class="control-label"></label>
+                <input asp-for="Bill" class="form-control" />
+                <span asp-validation-for="Bill" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderState" class="control-label"></label>
+                <select asp-for="OrderState" asp-items="@Html.GetEnumSelectList<OrderState>()"  class="form-control"></select>
+                <span asp-validation-for="OrderState" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaymentMethod" class="control-label"></label>
+                <select asp-for="PaymentMethod" asp-items="@Html.GetEnumSelectList<PayMethod>()" class="form-control"></select>
+                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerId" class="control-label"></label>
+                <select asp-for="CustomerId"   class ="form-control" asp-items="ViewBag.CustomerId"></select>
+                <!-- asp-items="Customers" -->
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

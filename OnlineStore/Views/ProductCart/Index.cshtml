@@ -1,0 +1,47 @@
+﻿@model IEnumerable<OnlineStore.Models.ProductCart>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductQuantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cart.CartId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductQuantity)
+            </td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { CartId=item.Cart.CartId,ProductId=item.Product.ProductID}) |
+                    @Html.ActionLink("Details", "Details", new {  CartId=item.Cart.CartId,ProductId=item.Product.ProductID}) |
+                    @Html.ActionLink("Delete", "Delete", new {  CartId=item.Cart.CartId,ProductId=item.Product.ProductID})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
