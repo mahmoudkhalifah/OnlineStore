@@ -9,6 +9,17 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<div>
+    <form method="POST" class="row">
+        <select name="orderState" asp-for="@Model.First().OrderState" asp-items="@Html.GetEnumSelectList<OrderState>()" class="form-control col-3"></select>
+        <input type="date" name="shippingDate" class="form-control col-3" />
+        <input type="date" name="arrivalDate" class="form-control col-3" />
+        <input type="submit" value="filter" class="btn btn-primary col-3" />
+    </form>
+    <form>
+        <input onclick="this.form.submit()" type="submit" value="reset filters" class="btn btn-primary col-3" />
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -52,7 +63,11 @@
                 @Html.DisplayFor(modelItem => item.Bill)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderState)
+                @*@Html.DisplayFor(modelItem => item.OrderState)*@
+                <form method="POST" action="Orders/UpdateOrderState">
+                    <input type="hidden" name="id" value="@item.OrderId">
+                    <select onchange="this.form.submit();" name="orderState" asp-for="@item.OrderState" asp-items="@Html.GetEnumSelectList<OrderState>()" class="form-control"></select>
+                </form>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PaymentMethod)

@@ -19,9 +19,20 @@ namespace OnlineStore.Controllers
         }
 
         // GET: OrdersController
-        public ActionResult Index()
+        public ActionResult Index(OrderState? orderState,DateTime? arrivalDate,DateTime? shippingDate)
         {
-            return View(OrderRepository.GetAll());
+            return View(OrderRepository.GetFilteredOrders(orderState:orderState,arrivalDate:arrivalDate,shippingDate:shippingDate));
+        }
+        [HttpPost]
+        public ActionResult UpdateOrderState(int id,OrderState orderState)
+        {
+            OrderRepository.UpdateOrderState(id, orderState);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        public ActionResult Index(OrderState orderState)
+        {
+            return View(OrderRepository.GetAll().Where(o=>o.OrderState == orderState));
         }
 
         // GET: OrdersController/Details/5

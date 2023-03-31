@@ -1,5 +1,6 @@
 ﻿using OnlineStore.Data;
 using OnlineStore.Models;
+using System.Collections.Generic;
 
 namespace OnlineStore.RepoServices
 {
@@ -69,6 +70,39 @@ namespace OnlineStore.RepoServices
             {
                 return 0;
             }
+        }
+
+        public int UpdateOrderState(int id, OrderState orderState)
+        {
+            try
+            {
+                Context.Orders.Find(id).OrderState = orderState;
+                Context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
+
+        public List<Order> GetFilteredOrders(OrderState? orderState, DateTime? arrivalDate, DateTime? shippingDate)
+        {
+            List<Order> orders = Context.Orders.ToList();
+            if(orderState != null)
+            {
+                orders = orders.Where(o=>o.OrderState == orderState).ToList();
+            }
+            if(arrivalDate != null)
+            {
+                orders = orders.Where(o => o.ArrivalDate == arrivalDate).ToList();
+            }
+            if (shippingDate != null)
+            {
+                orders = orders.Where(o => o.ShippingDate == shippingDate).ToList();
+            }
+            return orders;
         }
     }
 }
