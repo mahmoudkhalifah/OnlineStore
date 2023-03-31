@@ -1,4 +1,5 @@
-﻿using OnlineStore.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineStore.Data;
 using OnlineStore.Models;
 using System.Collections.Generic;
 
@@ -32,7 +33,7 @@ namespace OnlineStore.RepoServices
 
         public Order GetDetails(int id)
         {
-            return Context.Orders.Find(id);
+            return Context.Orders.Include(o=>o.Products).Include(o=>o.Customer).SingleOrDefault(o => o.OrderId == id);
         }
 
         public int Insert(Order order)
@@ -87,7 +88,7 @@ namespace OnlineStore.RepoServices
 
         }
 
-        public List<Order> GetFilteredOrders(OrderState? orderState, DateTime? arrivalDate, DateTime? shippingDate)
+        public List<Order> GetFilteredOrders(OrderState? orderState,DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate)
         {
             List<Order> orders = Context.Orders.ToList();
             if(orderState != null)
@@ -97,6 +98,10 @@ namespace OnlineStore.RepoServices
             if(arrivalDate != null)
             {
                 orders = orders.Where(o => o.ArrivalDate == arrivalDate).ToList();
+            }
+            if (orderDate != null)
+            {
+                orders = orders.Where(o => o.OrderDate == orderDate).ToList();
             }
             if (shippingDate != null)
             {
