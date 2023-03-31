@@ -21,25 +21,8 @@ namespace OnlineStore.Controllers
         // GET: OrdersController
         public ActionResult Index()
         {
-            ViewBag.orderState = OrderState.Processing;
             return View(OrderRepository.GetAll());
         }
-        [HttpPost]
-        public ActionResult Index(OrderState? orderState, DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate)
-        {
-            ViewBag.orderState = orderState;
-            ViewBag.orderDate = orderDate;
-            ViewBag.arrivalDate = arrivalDate;
-            ViewBag.shippingDate = shippingDate;
-            return View(OrderRepository.GetFilteredOrders(orderState: orderState,orderDate:orderDate, arrivalDate: arrivalDate, shippingDate: shippingDate));
-        }
-        [HttpPost]
-        public ActionResult UpdateOrderState(int id,OrderState orderState)
-        {
-            OrderRepository.UpdateOrderState(id, orderState);
-            return RedirectToAction(nameof(Index));
-        }
-        
 
         // GET: OrdersController/Details/5
         public ActionResult Details(int id)

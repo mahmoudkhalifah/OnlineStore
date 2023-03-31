@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
+
 using NuGet.Protocol.Core.Types;
 using OnlineStore.Data;
 using OnlineStore.RepoServices;
 using OnlineStore.Models;
-
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authentication;
 
 namespace OnlineStore
 {
@@ -13,9 +16,9 @@ namespace OnlineStore
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var config = builder.Configuration;
             //
-           
+
             builder.Services.AddDbContext<MainDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainDBContext") ?? throw new InvalidOperationException("Connection string 'MainDBContext' not found.")));
 
@@ -38,13 +41,28 @@ namespace OnlineStore
 
             builder.Services.AddScoped<IProductRepository, ProductRepositoryService>();
         
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(/*options=>options.SignIn.RequireConfirmedAccount = true*/)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
-           
-            builder.Services.AddControllersWithViews();
 
+          //  builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddAuthentication()
+   .AddGoogle(options =>
+   {
+       IConfigurationSection googleAuthNSection =
+       config.GetSection("Authentication:Google");
+       options.ClientId = googleAuthNSection["ClientId"];
+       options.ClientSecret = googleAuthNSection["ClientSecret"];
+   })
+   .AddFacebook(options =>
+   {
+       IConfigurationSection FBAuthNSection =
+       config.GetSection("Authentication:FB");
+       options.ClientId = FBAuthNSection["ClientId"];
+       options.ClientSecret = FBAuthNSection["ClientSecret"];
+   });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -63,7 +81,7 @@ namespace OnlineStore
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
