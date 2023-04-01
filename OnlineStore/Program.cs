@@ -40,13 +40,21 @@ namespace OnlineStore
             builder.Services.AddScoped<IProductCartRepository, ProductCartRepositoryService>();
 
             builder.Services.AddScoped<IProductRepository, ProductRepositoryService>();
-        
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(/*options=>options.SignIn.RequireConfirmedAccount = true*/)
+            builder.Services.AddCors(corsOptions =>
+            {
+                corsOptions.AddPolicy("MyPolicy", CorsPolicyBuilder =>
+                {
+                    CorsPolicyBuilder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>
+                (options=>options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
 
-          //  builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
             builder.Services.AddControllersWithViews();
             builder.Services.AddAuthentication()
    .AddGoogle(options =>
@@ -63,6 +71,7 @@ namespace OnlineStore
        options.ClientId = FBAuthNSection["ClientId"];
        options.ClientSecret = FBAuthNSection["ClientSecret"];
    });
+         
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -79,7 +88,7 @@ namespace OnlineStore
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseCors("MyPolicy");
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
