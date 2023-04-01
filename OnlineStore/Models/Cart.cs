@@ -15,7 +15,7 @@ namespace OnlineStore.Models
 
         [NotMapped]
         public decimal CartTotalBill{
-            get { decimal sum = 0; for (int i = 0; i < ProductsCarts.Count; i++) sum += ProductsCarts[i].Product.Price;
+            get { decimal sum = 0; for (int i = 0; i < ProductsCarts.Count; i++) sum += (ProductsCarts[i].Product.Price* ProductsCarts[i].ProductQuantity);
                 return sum;
             }
         }
