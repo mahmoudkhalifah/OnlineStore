@@ -37,7 +37,9 @@ namespace OnlineStore
             builder.Services.AddScoped<IProductCartRepository, ProductCartRepositoryService>();
 
             builder.Services.AddScoped<IProductRepository, ProductRepositoryService>();
-        
+            
+            builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
