@@ -1,0 +1,90 @@
+﻿@model IEnumerable<OnlineStore.Models.Product>
+
+@{
+    ViewData["Title"] = "Filter";
+    List<Product> products = Model.ToList();
+
+    List<Category> categories = ViewBag.categories;
+}
+
+<link href="~/css/home/css/bootstrap.css" rel="stylesheet" />
+
+<link href="~/css/home/css/bootstrap.min.css" rel="stylesheet" />
+
+<link href="~/css/home/css/responsive.css" rel="stylesheet" />
+
+<link href="~/css/home/css/jquery.mcustomscrollbar.min.css" rel="stylesheet" />
+
+<link href="~/css/home/css/font-awesome.min.css" rel="stylesheet" />
+
+<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css?family=Great+Vibes|Poppins:400,700&display=swap&subset=latin-ext" rel="stylesheet">
+
+<link href="~/css/home/css/owl.carousel.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+
+<link href="~/css/home/css/style.css" rel="stylesheet" />
+
+
+<div class="filter">
+    <div>
+    <form asp-action="Filter" method="post">
+
+        <select class="form-select-sm" name="catID"
+                asp-items="new SelectList(categories, nameof(Category.CategoryId),
+                   nameof(Category.CategoryName))">
+        </select>
+
+
+        <input type="number" name="minPrice" min="1" placeholder="Min Price" class="priceFilter">
+        <input type="number" name="maxPrice" min="1" placeholder="Max Price" class="priceFilter">
+        <input type="submit" value="Apply" />
+    </form>
+    </div>
+
+    <!-- Another variation with a button -->
+    <form asp-action="SearchProducts" method="post">
+        <div class="input-group searchBar">
+            <input type="text" name="productName" class="form-control" placeholder="Search this blog">
+            <div class="input-group-append">
+                <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+                <div class="container">
+
+                    <div class="fashion_section_2">
+                        <div class="row">
+
+                            @{
+                                for (int i = 0; i < products.Count; i++)
+                                {
+                                    <div class="col-lg-4 col-sm-4">
+                                        <div class="box_main">
+                                            <h4 class="shirt_text">@products[i].ProductName</h4>
+                                            <p class="price_text">Price  <span style="color: #262626;">@products[i].Price</span></p>
+                                            <div class="tshirt_img"><img src=@(products[i].StringFromByteArray(products[i].Image1))></div>
+                                            <div class="btn_main">
+                                                <div class="buy_bt"><a href="#">Buy Now</a></div>
+                                                <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@products[i].ProductID">See More</a> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+
+

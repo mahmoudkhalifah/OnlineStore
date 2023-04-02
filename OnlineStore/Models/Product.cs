@@ -55,5 +55,16 @@ namespace OnlineStore.Models
         public virtual List<Order> Orders { get; set; } = new List<Order>();
         public virtual List<ProductCart> ProductsCarts { get; set; } = new List<ProductCart>();
 
+
+        public string StringFromByteArray(byte[] bytes)
+        {
+            string url = "";
+            if (bytes != null && bytes.Length > 0)
+            {
+                string img = Convert.ToBase64String(bytes, 0, bytes.Length);
+                url = "data:image/jpeg;base64," + img;
+            }
+            return url;
+        }
     }
 }
