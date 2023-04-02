@@ -28,5 +28,8 @@ namespace OnlineStore.Models
         public  int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
 
+        //one-to-many
+        public virtual List<Order>? Orders { get; set; }
+
     }
 }

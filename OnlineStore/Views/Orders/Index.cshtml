@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <div>
     <form method="POST">
         <select name="orderState" asp-items="@Html.GetEnumSelectList<OrderState>()" class="form-control col-3">

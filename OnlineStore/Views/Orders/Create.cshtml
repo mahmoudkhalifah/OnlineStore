@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
-    //var Customers = new SelectList(ViewBag.Customers, "CustomerId", "FullName");
+    var customers = new SelectList(ViewBag.customers, "CustomerId", "FullName");
 }
 
 <h1>Create</h1>
@@ -45,8 +45,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId"   class ="form-control" asp-items="ViewBag.CustomerId"></select>
-                <!-- asp-items="Customers" -->
+                <select asp-for="CustomerId"   class ="form-control" asp-items="customers"></select>
+                <!-- asp-items="customers" -->
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

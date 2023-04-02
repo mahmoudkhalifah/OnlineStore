@@ -24,7 +24,6 @@ namespace OnlineStore.Controllers
         // GET: OrdersController
         public ActionResult Index()
         {
-            ViewBag.orderState = OrderState.Processing;
             return View(OrderRepository.GetAll());
         }
         [HttpPost]
@@ -55,7 +54,7 @@ namespace OnlineStore.Controllers
         // GET: OrdersController/Create
         public ActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname");
+            ViewBag.customers = CustomerRepository.GetAll();
             return View();
         }
 
@@ -89,7 +88,7 @@ namespace OnlineStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", ord.CustomerId);
+            ViewBag.customers = CustomerRepository.GetAll();
             return View(ord);
         }
 
@@ -107,13 +106,11 @@ namespace OnlineStore.Controllers
                 }
                 catch
                 {
-                    ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
-                    return View(order);
+                    ViewBag.customers = CustomerRepository.GetAll(); return View(order);
 
                 }
             }
-            ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
-            return View(order);
+            ViewBag.customers = CustomerRepository.GetAll(); return View(order);
         }
 
         // GET: OrdersController/Delete/5

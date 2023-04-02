@@ -19,15 +19,18 @@ namespace OnlineStore.Models
         public OrderState OrderState { get; set; } = OrderState.Processing;
         public PayMethod PaymentMethod{ get; set; } = PayMethod.Cash;
 
+        [ForeignKey("Address")]
+        public int? AddressId { get; set; }
+        public virtual Address? Address { get; set; }
 
         [ForeignKey("Customer")]
         public  int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
-       
+
 
         //foregin key (Many to many)
-        public virtual List<Product> Products { get; set; }
-        
+        public virtual List<ProductOrders> ProductOrders { get; set; } = new List<ProductOrders>();
+
 
     }
 }

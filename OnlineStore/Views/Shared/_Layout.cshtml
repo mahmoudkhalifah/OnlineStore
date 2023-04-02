@@ -35,7 +35,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Customers</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Carts</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index"  asp-route-id="1">Carts</a>
                         </li>
                          <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
@@ -44,9 +44,14 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="ProductCart" asp-action="Index">Product Carts</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
+                          <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
                         </li>
-                        
+                        <li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Manage Roles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
