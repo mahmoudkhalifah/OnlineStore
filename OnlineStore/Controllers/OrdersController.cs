@@ -35,12 +35,14 @@ namespace OnlineStore.Controllers
             ViewBag.arrivalDate = arrivalDate;
             ViewBag.shippingDate = shippingDate;
             return View(OrderRepository.GetFilteredOrders(orderState: orderState,orderDate:orderDate, arrivalDate: arrivalDate, shippingDate: shippingDate));
+
         }
         [HttpPost]
         public ActionResult UpdateOrderState(int id,OrderState orderState)
         {
             OrderRepository.UpdateOrderState(id, orderState);
             return RedirectToAction(nameof(Index));
+
         }
         
 

@@ -90,6 +90,7 @@
             </td>
             <td>
                 @*@Html.DisplayFor(modelItem => item.OrderState)*@
+
                 <form method="POST" action="Orders/UpdateOrderState">
                     <input type="hidden" name="id" value="@item.OrderId">
                     <select onchange="this.form.submit();" name="orderState" asp-for="@item.OrderState" asp-items="@Html.GetEnumSelectList<OrderState>()" class="form-control"></select>
