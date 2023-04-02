@@ -64,7 +64,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Image1" class="control-label"></label>
-                <input asp-for="Image1" class="form-control" />
+                @*<input asp-for="Image1" class="form-control" />*@
+                <input type="file" name="Image1" accept="image/png, image/jpeg, image/jpg"/>
                 <span asp-validation-for="Image1" class="text-danger"></span>
             </div>
             <div class="form-group">

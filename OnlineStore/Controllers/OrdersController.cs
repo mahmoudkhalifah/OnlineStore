@@ -5,9 +5,12 @@ using NuGet.Protocol.Core.Types;
 using OnlineStore.Models;
 using System.Security.Cryptography;
 using OnlineStore.RepoServices;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace OnlineStore.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         public IOrderRepository OrderRepository { get; }
