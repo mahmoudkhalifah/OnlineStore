@@ -9,5 +9,9 @@ namespace OnlineStore.RepoServices
         public int Insert(Order order);
         public int UpdateOrder(int id, Order order);
         public int DeleteOrder(int id);
+
+        public int UpdateOrderState(int id,OrderState orderState);
+
+        public List<Order> GetFilteredOrders(OrderState? orderState, DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate);
     }
 }
