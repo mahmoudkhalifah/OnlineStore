@@ -15,12 +15,13 @@ namespace OnlineStore.RepoServices
         public Report GetReport(DateTime? startDate,DateTime? endDate)
         {
             List<Order> orders;
-            if (startDate != null && endDate != null)
+            /*if (startDate != null && endDate != null)
             {
                 orders = Context.Orders
                     .Include(o => o.Products)
                     .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
                     .ToList();
+
             }
             else if(startDate != null)
             {
@@ -47,12 +48,13 @@ namespace OnlineStore.RepoServices
             report.TotalNumOfOrders = orders.Count();
             report.TotalNumOfProducts = orders.Select(o => o.Products.Count()).Sum();
             report.TotalMoney = orders.Select(o => o.Bill).Sum();
-            /*report.Products = orders.SelectMany(o => o.Products).Distinct()
+            *//*report.Products = orders.SelectMany(o => o.Products).Distinct()
                 .OrderBy(p => p.)
                 .Take(5)
                 .ToList();*/
 
-            return report;
+            //return report;
+            return new Report() { };
 
         }
     }
