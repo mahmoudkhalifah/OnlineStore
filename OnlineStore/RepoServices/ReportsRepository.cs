@@ -14,7 +14,7 @@ namespace OnlineStore.RepoServices
         
         public Report GetReport(DateTime? startDate,DateTime? endDate)
         {
-            List<Order> orders;
+            /*List<Order> orders;
             if (startDate != null && endDate != null)
             {
                 orders = Context.Orders
@@ -52,7 +52,8 @@ namespace OnlineStore.RepoServices
                 .Take(5)
                 .ToList();*/
 
-            return report;
+            //return report;
+            return new Report();
 
         }
     }

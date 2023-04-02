@@ -55,6 +55,7 @@ namespace OnlineStore.RepoServices
         {
             
             try
+
             {
                 Order order1 = Context.Orders.Find(id);
 
@@ -90,6 +91,7 @@ namespace OnlineStore.RepoServices
 
         public List<Order> GetFilteredOrders(OrderState? orderState,DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate)
         {
+
             List<Order> orders = Context.Orders.ToList();
             if(orderState != null)
             {
