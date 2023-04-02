@@ -53,7 +53,7 @@ namespace OnlineStore.Models
 
         //foregin key (Many to many)
         public virtual List<Category> Categories { get; set;} = new List<Category>();
-        public virtual List<Order> Orders { get; set; } = new List<Order>();
+        public virtual List<ProductOrders> ProductOrders { get; set; } = new List<ProductOrders>();
         public virtual List<ProductCart> ProductsCarts { get; set; } = new List<ProductCart>();
 
         public Image ImageFromByteArray(byte[] bytes)
