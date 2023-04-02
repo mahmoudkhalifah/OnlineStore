@@ -8,9 +8,9 @@ namespace OnlineStore.Models
     public class ApplicationUser:IdentityUser
     {
         [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Please enter First Name "), MaxLength(40)]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
         [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Please enter Last Name "), MaxLength(40)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         public byte[]? ProfilePicture { get; set; } 
     }
 }

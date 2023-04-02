@@ -21,6 +21,7 @@ namespace OnlineStore.RepoServices
                     .Include(o => o.Products)
                     .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
                     .ToList();
+
             }
             else if(startDate != null)
             {
@@ -47,7 +48,7 @@ namespace OnlineStore.RepoServices
             report.TotalNumOfOrders = orders.Count();
             report.TotalNumOfProducts = orders.Select(o => o.Products.Count()).Sum();
             report.TotalMoney = orders.Select(o => o.Bill).Sum();
-            /*report.Products = orders.SelectMany(o => o.Products).Distinct()
+            *//*report.Products = orders.SelectMany(o => o.Products).Distinct()
                 .OrderBy(p => p.)
                 .Take(5)
                 .ToList();*/
