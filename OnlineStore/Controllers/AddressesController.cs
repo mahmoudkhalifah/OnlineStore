@@ -44,9 +44,10 @@ namespace OnlineStore.Controllers
         }
 
         // GET: Addresses/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            ViewData["CustomerId"] = new SelectList(customerRepo.GetAll(), "CustomerId", "Fname");
+            //ViewData["CustomerId"] = new SelectList(customerRepo.GetAll().Where(x=>x.CustomerId==id), "CustomerId", "Fname");
+            ViewData["CustomerId"] = id;
             return View();
         }
 
@@ -57,23 +58,22 @@ namespace OnlineStore.Controllers
         [ValidateAntiForgeryToken]
         public  ActionResult Create([Bind("AddressId,ApartmentNo,FloorNumber,Street,Zone,City,Governorate,Country,NearestLandmark,CustomerId")] Address address)
         {
-            if (ModelState.IsValid)
-            {
+            //address.Customer = customerRepo.GetDetails(address.CustomerId);
+            
                 try
                 {
                     if (addressRepo.Insert(address) == 1)
-                        return RedirectToAction(nameof(Index));
-                    else return View(address); ;
+                         return RedirectToAction("Checkout", "Orders", new { id = address.CustomerId });
+                   else return View(address); 
                 }
                 catch
                 {
-                    ViewData["CustomerId"] = new SelectList(customerRepo.GetAll(), "CustomerId", "Fname", address.CustomerId);
+                    ViewData["CustomerId"] = address.CustomerId;
                     return View(address);
                 }
 
-            }
-            ViewData["CustomerId"] = new SelectList(customerRepo.GetAll(), "CustomerId", "Fname", address.CustomerId);
-            return View(address);
+                
+            
 
         }
             // GET: Addresses/Edit/5
