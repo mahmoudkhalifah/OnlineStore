@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
+using System.Text;
 
 namespace OnlineStore.Models
 {
@@ -63,6 +64,16 @@ namespace OnlineStore.Models
         public virtual List<Category> Categories { get; set;} = new List<Category>();
         public virtual List<ProductOrders> ProductOrders { get; set; } = new List<ProductOrders>();
         public virtual List<ProductCart> ProductsCarts { get; set; } = new List<ProductCart>();
+
+        public string CategoryString()
+        {
+            StringBuilder categs = new StringBuilder("");
+            for(int i = 0; i < Categories.Count; i++)
+            {
+                categs.Append(" " + Categories[i].CategoryName);
+            }
+            return categs.ToString();
+        }
 
         public Image ImageFromByteArray(byte[] bytes)
         {

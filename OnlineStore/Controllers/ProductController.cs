@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineStore.Models;
 using OnlineStore.RepoServices;
 using System.Data;
@@ -15,9 +16,11 @@ namespace OnlineStore.Controllers
     public class ProductController : Controller
     {
         public IProductRepository ProductRepository { get; set; }
-        public ProductController(IProductRepository productRepository)
+        public ICategoryRepository categoryRepository { get; set; }
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
             this.ProductRepository = productRepository;
+            this.categoryRepository = categoryRepository;
         }
         // GET: ProductController
         public ActionResult Index()
@@ -34,13 +37,14 @@ namespace OnlineStore.Controllers
         // GET: ProductController/Create
         public ActionResult Create()
         {
+            ViewData["Categories"] = new MultiSelectList(categoryRepository.GetAll(), "CategoryId", "CategoryName");
             return View();
         }
 
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Product product)
+        public ActionResult Create(Product product,IFormCollection collection)
         {
             if (ModelState.IsValid)
             {
@@ -93,6 +97,11 @@ namespace OnlineStore.Controllers
                     }
 
                 }
+                for (int i = 0; i < collection["Categories"].Count(); i++)
+                {
+                    Category cat = categoryRepository.GetDetails(int.Parse(collection["Categories"][i]));
+                    product.Categories.Add(cat);
+                }
                 ProductRepository.Insert(product);
                 return RedirectToAction("Index");
             }
@@ -103,7 +112,9 @@ namespace OnlineStore.Controllers
         // GET: ProductController/Edit/5
         public ActionResult Edit(int id)
         {
+           
             Product product = ProductRepository.GetDetails(id);
+            ViewData["Categories"] = new MultiSelectList(categoryRepository.GetAll(), "CategoryId", "CategoryName",product.Categories.Select(x=>x.CategoryId).ToList());
             return View(product);
         }
 
@@ -162,6 +173,11 @@ namespace OnlineStore.Controllers
                         }
                     }
 
+                }
+                for (int i = 0; i < collection["Categories"].Count();i++)
+                {
+                    Category cat = categoryRepository.GetDetails(int.Parse(collection["Categories"][i]));
+                    product.Categories.Add(cat);
                 }
                 ProductRepository.UpdateProduct(product);
                 return RedirectToAction("Index");
