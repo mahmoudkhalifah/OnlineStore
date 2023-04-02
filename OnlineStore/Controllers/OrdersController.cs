@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using EllipticCurve.Utils;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OnlineStore.Controllers
 {
@@ -20,11 +21,16 @@ namespace OnlineStore.Controllers
         public IOrderRepository OrderRepository { get; }
         public ICustomerRepository CustomerRepository { get; }
         public IProductOrderRepository ProductOrderRepository { get; }
-        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository, IProductOrderRepository productOrderRepository)
+        public IProductCartRepository ProductCartRepository { get; }
+        public IProductRepository ProductRepository { get; }
+        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository, IProductOrderRepository productOrderRepository
+            , IProductCartRepository productCartRepository, IProductRepository productRepository)
         {
             OrderRepository = orderRepository;
             CustomerRepository = customerRepository;
             ProductOrderRepository = productOrderRepository;
+            ProductCartRepository = productCartRepository;
+            ProductRepository = productRepository;
         }
 
         // GET: OrdersController
@@ -38,12 +44,24 @@ namespace OnlineStore.Controllers
         {
             return View(OrderRepository.GetDetails(id));
         }
-        public List<ProductOrders> GetProductOrders(List<ProductCart>pcs)
+        public List<ProductOrders> GetProductOrders(Cart cart , Order order)
         {
             List<ProductOrders> ret = new();
-            foreach(var pc in pcs)
+            foreach(var productInCart in cart.ProductsCarts)
             {
-                //ret.Add(new ProductOrders() { })
+                ProductOrders productsOrder = new()
+                {
+                    OrderId = order.OrderId
+                    ,
+                    Order = order
+                    ,
+                    ProductId = productInCart.ProductId
+                    ,
+                    ProductQuantity = productInCart.ProductQuantity
+                };
+                ProductOrderRepository.Insert(productsOrder);
+                //ProductCartRepository.DeleteProductCart()
+                ret.Add(productsOrder);
             }
             return ret;
         }
@@ -54,13 +72,12 @@ namespace OnlineStore.Controllers
             try
             {
                 int CustomertId = id;
-                if (CustomertId == 0)
-                    CustomertId = 1;
+                //if (CustomertId == 0)
+                //    CustomertId = 1;
 
                 //if (order.Customer == null)
                 //    order.Customer = CustomerRepository.GetDetails(order.CustomerId);
                 //order.Products = new(order.Customer.Cart.ProductsList());
-                //TODO: empty cart
                 //ViewBag.orderStates = new SelectList(Enums.OrderState)
                 Customer customer = CustomerRepository.GetDetails(CustomertId);
                 ViewBag.CustomerId = customer.CustomerId;
@@ -83,8 +100,15 @@ namespace OnlineStore.Controllers
             {
                 //here: order is created
                 //TODO: call email
-                //TODO: empty the cart
+                order.Customer = CustomerRepository.GetDetails(order.CustomerId);
                 OrderRepository.Insert(order);
+                order.ProductOrders = GetProductOrders(order.Customer.Cart , order);
+
+                //TODO: empty cart , update quatity
+                updateProductQuantity(order.Customer.Cart);
+                emptyCart(order.Customer.Cart);
+
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -93,6 +117,16 @@ namespace OnlineStore.Controllers
                 return View(order);
             }
         }
+
+        private void emptyCart(Cart cart)
+        {
+            while(!cart.ProductsCarts.IsNullOrEmpty())
+            {
+                ProductCartRepository.DeleteProductCart(cart.ProductsCarts[0].CartId, cart.ProductsCarts[0].ProductId);
+
+            }
+        }
+
         // GET: OrdersController/Create
         public ActionResult Create()
         {
@@ -200,6 +234,27 @@ namespace OnlineStore.Controllers
             {
                 return View();
             }
+        }
+        void updateProductQuantity(Cart cart)
+        {
+            foreach(var productInCart in cart.ProductsCarts)
+            {
+                var oldProduct = ProductRepository.GetDetails(productInCart.ProductId);
+                oldProduct.Sold = oldProduct.Sold + productInCart.ProductQuantity;
+                oldProduct.AvailableQuantity = oldProduct.AvailableQuantity - productInCart.ProductQuantity;
+
+                //Product newProduct = new()
+                //{
+                //    ProductID = oldProduct.ProductID,
+                //    ProductName = oldProduct.ProductName,
+                //    AvailableQuantity = oldProduct.AvailableQuantity - productInCart.ProductQuantity,
+                //    Sold = oldProduct.Sold + productInCart.ProductQuantity,
+                //    Categories = oldProduct.Categories,
+                //    Description = 
+                //}
+                ProductRepository.UpdateProduct(oldProduct);
+            }
+            
         }
     }
 }
