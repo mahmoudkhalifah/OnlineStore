@@ -7,10 +7,12 @@ using System.Security.Cryptography;
 using OnlineStore.RepoServices;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using EllipticCurve.Utils;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace OnlineStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         public IOrderRepository OrderRepository { get; }
@@ -32,7 +34,58 @@ namespace OnlineStore.Controllers
         {
             return View(OrderRepository.GetDetails(id));
         }
+        public List<ProductOrders> GetProductOrders(List<ProductCart>pcs)
+        {
+            List<ProductOrders> ret = new();
+            foreach(var pc in pcs)
+            {
+                //ret.Add(new ProductOrders() { })
+            }
+            return ret;
+        }
+        // GET: OrdersController/Checkout
+        //[Authorize(Roles = "User")]
+        public ActionResult Checkout(int id)//CustomertId
+        {
+            try
+            {
+                int CustomertId = id;
+                if (CustomertId == 0)
+                    CustomertId = 1;
 
+                //if (order.Customer == null)
+                //    order.Customer = CustomerRepository.GetDetails(order.CustomerId);
+                //order.Products = new(order.Customer.Cart.ProductsList());
+                //TODO: empty cart
+                //ViewBag.orderStates = new SelectList(Enums.OrderState)
+                Customer customer = CustomerRepository.GetDetails(CustomertId);
+                ViewBag.CustomerId = customer.CustomerId;
+                Order order = new Order() { Customer = customer , CustomerId = customer.CustomerId};
+                //return View();
+                return View(order);
+                //return RedirectToAction(nameof(Details) , new { id = order.OrderId });
+            }
+            catch
+            {
+                //ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
+                //return View(order);
+                return View();
+            }
+        }
+        [HttpPost]
+        public ActionResult Checkout( Order order)
+        {
+            try
+            {
+                OrderRepository.Insert(order);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
+                return View(order);
+            }
+        }
         // GET: OrdersController/Create
         public ActionResult Create()
         {

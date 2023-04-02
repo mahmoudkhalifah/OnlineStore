@@ -1,4 +1,5 @@
-﻿using OnlineStore.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using OnlineStore.Data;
 using OnlineStore.Models;
 
 namespace OnlineStore.RepoServices
@@ -31,7 +32,10 @@ namespace OnlineStore.RepoServices
 
         public Order GetDetails(int id)
         {
-            return Context.Orders.Find(id);
+            //TODO: include OrderProducts
+            return Context.Orders
+                .Include(o => o.Customer).ThenInclude(c => c.Addresses)
+                .FirstOrDefault(o => o.OrderId == id);
         }
 
         public int Insert(Order order)
