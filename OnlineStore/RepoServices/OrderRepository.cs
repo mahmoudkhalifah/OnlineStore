@@ -32,7 +32,9 @@ namespace OnlineStore.RepoServices
 
         public Order GetDetails(int id)
         {
+
             return Context.Orders.Where(o => o.OrderId == id).Include(o => o.ProductOrders).ThenInclude(o => o.Product).Include(o => o.Address).Include(o => o.Customer).FirstOrDefault();
+
         }
 
         public int Insert(Order order)
