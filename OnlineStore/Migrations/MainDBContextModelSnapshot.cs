@@ -17,7 +17,7 @@ namespace OnlineStore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -175,6 +175,9 @@ namespace OnlineStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ArrivalDate")
                         .HasColumnType("datetime2");
 
@@ -197,6 +200,8 @@ namespace OnlineStore.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("CustomerId");
 
@@ -279,19 +284,22 @@ namespace OnlineStore.Migrations
                     b.ToTable("ProductsCarts");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
+            modelBuilder.Entity("OnlineStore.Models.ProductOrders", b =>
                 {
-                    b.Property<int>("OrdersOrderId")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductsProductID")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.HasKey("OrdersOrderId", "ProductsProductID");
+                    b.Property<int?>("ProductQuantity")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ProductsProductID");
+                    b.HasKey("OrderId", "ProductId");
 
-                    b.ToTable("OrderProduct");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductOrders");
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -333,11 +341,17 @@ namespace OnlineStore.Migrations
 
             modelBuilder.Entity("OnlineStore.Models.Order", b =>
                 {
+                    b.HasOne("OnlineStore.Models.Address", "Address")
+                        .WithMany("Orders")
+                        .HasForeignKey("AddressId");
+
                     b.HasOne("OnlineStore.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Address");
 
                     b.Navigation("Customer");
                 });
@@ -361,19 +375,28 @@ namespace OnlineStore.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
+            modelBuilder.Entity("OnlineStore.Models.ProductOrders", b =>
                 {
-                    b.HasOne("OnlineStore.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersOrderId")
+                    b.HasOne("OnlineStore.Models.Order", "Order")
+                        .WithMany("ProductOrders")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnlineStore.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsProductID")
+                    b.HasOne("OnlineStore.Models.Product", "Product")
+                        .WithMany("ProductOrders")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("OnlineStore.Models.Address", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("OnlineStore.Models.Cart", b =>
@@ -391,8 +414,15 @@ namespace OnlineStore.Migrations
                     b.Navigation("Orders");
                 });
 
+            modelBuilder.Entity("OnlineStore.Models.Order", b =>
+                {
+                    b.Navigation("ProductOrders");
+                });
+
             modelBuilder.Entity("OnlineStore.Models.Product", b =>
                 {
+                    b.Navigation("ProductOrders");
+
                     b.Navigation("ProductsCarts");
                 });
 #pragma warning restore 612, 618

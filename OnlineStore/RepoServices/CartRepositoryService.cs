@@ -25,7 +25,7 @@ namespace OnlineStore.RepoServices
 
         public Cart GetDetails(int id)
         {
-            return context.Carts.Find(id);
+            return context.Carts.Include(p => p.ProductsCarts).ThenInclude(x => x.Product).Include(p => p.ProductsCarts).Include(p => p.Customer).Where(c=>c.CartId==id).First();
         }
 
         public void Insert(Cart cart)

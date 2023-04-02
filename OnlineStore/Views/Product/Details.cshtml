@@ -74,19 +74,20 @@
             @Html.DisplayNameFor(model => model.Image1)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image1)
+            
+             <img style="width:30%;height:30%;" src=@(Model.StringFromByteArray(Model.Image1))  alt=@Model.ProductName>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Image2)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image2)
+             <img style="width:30%;height:30%;"src=@(Model.StringFromByteArray(Model.Image2))  alt=@Model.ProductName>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Image3)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Image3)
+             <img style="width:30%;height:30%;"src=@(Model.StringFromByteArray(Model.Image3))  alt=@Model.ProductName>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ReleaseDate)

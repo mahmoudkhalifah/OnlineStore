@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Drawing;
+using System.Text;
 
 namespace OnlineStore.Models
 {
@@ -46,16 +49,40 @@ namespace OnlineStore.Models
         public byte[]? Image2 { set; get; }
         public byte[]? Image3 { set; get; }
 
+        [NotMapped]
+        public IFormFile? image1 { get; set; }
+        [NotMapped]
+        public IFormFile? image2 { get; set; }
+        [NotMapped]
+        public IFormFile? image3 { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { set; get; } = DateTime.Now;
         //byte[] imgdata = System.IO.File.ReadAllBytes(HttpContext.Current.Server.MapPath(path));
 
         //foregin key (Many to many)
         public virtual List<Category> Categories { get; set;} = new List<Category>();
-        public virtual List<Order> Orders { get; set; } = new List<Order>();
+        public virtual List<ProductOrders> ProductOrders { get; set; } = new List<ProductOrders>();
         public virtual List<ProductCart> ProductsCarts { get; set; } = new List<ProductCart>();
 
+        public string CategoryString()
+        {
+            StringBuilder categs = new StringBuilder("");
+            for(int i = 0; i < Categories.Count; i++)
+            {
+                categs.Append(" " + Categories[i].CategoryName);
+            }
+            return categs.ToString();
+        }
 
+        public Image ImageFromByteArray(byte[] bytes)
+        {
+            using (MemoryStream ms = new MemoryStream(bytes))
+            using (Image image = Image.FromStream(ms, true, true))
+            {
+                return (Image)image.Clone();
+            }
+        }
         public string StringFromByteArray(byte[] bytes)
         {
             string url = "";
@@ -64,7 +91,12 @@ namespace OnlineStore.Models
                 string img = Convert.ToBase64String(bytes, 0, bytes.Length);
                 url = "data:image/jpeg;base64," + img;
             }
+            if (bytes==null)
+            {
+                url = "~/NoImage.png";
+            }
             return url;
         }
+
     }
 }

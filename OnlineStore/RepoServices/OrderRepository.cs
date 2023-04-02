@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OnlineStore.Data;
 using OnlineStore.Models;
-using System.Collections.Generic;
 
 namespace OnlineStore.RepoServices
 {
@@ -33,7 +32,12 @@ namespace OnlineStore.RepoServices
 
         public Order GetDetails(int id)
         {
-            return Context.Orders.Include(o=>o.Products).Include(o=>o.Customer).SingleOrDefault(o => o.OrderId == id);
+            return Context.Orders
+                .Include(o=>o.Address)
+                .Include(o=>o.Customer)
+                .Include(o=>o.ProductOrders)
+                .ThenInclude(po=>po.Product)
+                .FirstOrDefault(o=>o.OrderId == id);
         }
 
         public int Insert(Order order)
@@ -41,6 +45,7 @@ namespace OnlineStore.RepoServices
             
             try
             {
+                
                 Context.Orders.Add(order);
                 Context.SaveChanges();
                 return 1;
@@ -55,6 +60,7 @@ namespace OnlineStore.RepoServices
         {
             
             try
+
             {
                 Order order1 = Context.Orders.Find(id);
 
@@ -64,6 +70,7 @@ namespace OnlineStore.RepoServices
                 order1.OrderState = order.OrderState;
                 order1.Bill = order.Bill;
                 order1.PaymentMethod = order.PaymentMethod;
+                order1.ProductOrders = order.ProductOrders;
                 Context.SaveChanges();
                 return 1;
             }
@@ -90,6 +97,7 @@ namespace OnlineStore.RepoServices
 
         public List<Order> GetFilteredOrders(OrderState? orderState,DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate)
         {
+
             List<Order> orders = Context.Orders.ToList();
             if(orderState != null)
             {

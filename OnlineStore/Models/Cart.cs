@@ -13,35 +13,36 @@ namespace OnlineStore.Models
         public int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
 
+        [NotMapped]
+        public decimal CartTotalBill{
+            get { decimal sum = 0; for (int i = 0; i < ProductsCarts.Count; i++) sum += (ProductsCarts[i].Product.Price* ProductsCarts[i].ProductQuantity);
+                return sum;
+            }
+        }
+
         public virtual List<ProductCart> ProductsCarts { get; set; } = new List<ProductCart>();
 
-        public void AddProduct(Product product)
+        public void AddProduct(int productId)
         {
-            ProductsCarts.Add(new ProductCart()
-            {
-                CartId = this.CartId,
-                ProductId = product.ProductID
-            });
+            //ProductsCarts.Add(new ProductCart()
+            //{
+            //    CartId = this.CartId,
+            //    ProductId = productId
+            //}) ;
 
         }
-        public void RemoveProduct(Product product)
+        public int RemoveProduct(int productId)
         {
-            ProductsCarts.Remove(ProductsCarts.Where(pc => pc.ProductId == product.ProductID && pc.CartId == CartId).First());
-
+            ProductsCarts.Remove(ProductsCarts.Where(pc => pc.ProductId == productId && pc.CartId == CartId).First());
+            return 1;
         }
-        public void EditQuantity(Product product,int quantity)
+        public void EditQuantity(int productId, int quantity)
         {
 
-          ProductsCarts.Where(pc => pc.ProductId == product.ProductID && pc.CartId == CartId).First().ProductQuantity=quantity;
+          ProductsCarts.Where(pc => pc.ProductId == productId && pc.CartId == CartId).First().ProductQuantity=quantity;
             
         }
-        //public Order CreateOrder()
-        //{
-        //    Order ord= new Order();
-        //    for(int i=0;i<)
-
-        //    return ord;
-        //}
+       
 
     }
 }
