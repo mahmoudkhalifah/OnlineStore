@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineStore.Data;
 
@@ -11,9 +12,11 @@ using OnlineStore.Data;
 namespace OnlineStore.Migrations
 {
     [DbContext(typeof(MainDBContext))]
-    partial class MainDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230402000014_addNewModelClass")]
+    partial class addNewModelClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,9 +178,6 @@ namespace OnlineStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ArrivalDate")
                         .HasColumnType("datetime2");
 
@@ -200,8 +200,6 @@ namespace OnlineStore.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("OrderId");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("CustomerId");
 
@@ -341,17 +339,11 @@ namespace OnlineStore.Migrations
 
             modelBuilder.Entity("OnlineStore.Models.Order", b =>
                 {
-                    b.HasOne("OnlineStore.Models.Address", "Address")
-                        .WithMany("Orders")
-                        .HasForeignKey("AddressId");
-
                     b.HasOne("OnlineStore.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("Customer");
                 });
@@ -392,11 +384,6 @@ namespace OnlineStore.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("OnlineStore.Models.Address", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("OnlineStore.Models.Cart", b =>

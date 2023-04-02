@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
 namespace OnlineStore.Models
 {
@@ -52,8 +53,27 @@ namespace OnlineStore.Models
 
         //foregin key (Many to many)
         public virtual List<Category> Categories { get; set;} = new List<Category>();
-        public virtual List<Order> Orders { get; set; } = new List<Order>();
+        public virtual List<ProductOrders> ProductOrders { get; set; } = new List<ProductOrders>();
         public virtual List<ProductCart> ProductsCarts { get; set; } = new List<ProductCart>();
+
+        public Image ImageFromByteArray(byte[] bytes)
+        {
+            using (MemoryStream ms = new MemoryStream(bytes))
+            using (Image image = Image.FromStream(ms, true, true))
+            {
+                return (Image)image.Clone();
+            }
+        }
+        public string StringFromByteArray(byte[] bytes)
+        {
+            string url = "";
+            if (bytes != null && bytes.Length > 0)
+            {
+                string img = Convert.ToBase64String(bytes, 0, bytes.Length);
+                url = "data:image/jpeg;base64," + img;
+            }
+            return url;
+        }
 
     }
 }
