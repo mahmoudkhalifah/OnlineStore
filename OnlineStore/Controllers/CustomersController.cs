@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,17 @@ namespace OnlineStore.Controllers
     {
         public ICartRepository cartRepo { get;}
         public ICustomerRepository customerRepo  { get;}
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-    public CustomersController( ICustomerRepository custrepo, ICartRepository carrepo)
+        public CustomersController( ICustomerRepository custrepo, ICartRepository carrepo, UserManager<ApplicationUser> userManager,
+          
+            SignInManager<ApplicationUser> signInManager)
         {
             cartRepo = carrepo;
             customerRepo = custrepo;
+            this._signInManager = signInManager;
+            this._userManager = userManager;
         }
 
         // GET: Customers
