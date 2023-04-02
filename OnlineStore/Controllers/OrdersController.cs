@@ -77,6 +77,9 @@ namespace OnlineStore.Controllers
         {
             try
             {
+                //here: order is created
+                //TODO: call email
+                //TODO: empty the cart
                 OrderRepository.Insert(order);
                 return RedirectToAction(nameof(Index));
             }
