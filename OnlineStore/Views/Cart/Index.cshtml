@@ -40,10 +40,7 @@
                                     <h6 class="text-black mb-0">@item.Product.Description</h6>
                                 </div>
                                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                                        <!--<button  type="button" class="btn btn-link px-2"  onclick="location.href='Url.Action("EditProductCart", "ProductCart",new{cartId=item.CartId,prodId=item.ProductId,quantity=item.ProductQuantity--})'">
-                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                        <i class="fas fa-minus"></i>
-                                                </button>-->
+                                                      
 
                                              <span class="input-group-btn">
                                                         <button type="button" class="quantity-left-minus btn btn-danger btn-number"  data-type="minus" data-field="-" onclick="location.href='@Url.Action("EditProductCart", "ProductCart",new{cartId=item.CartId,prodId=item.ProductId,quantity=item.ProductQuantity-1})'">
@@ -56,10 +53,7 @@
                                                    + <span class="glyphicon glyphicon-plus"></span>
                                                 </button>
                                             </span>
-                                                       <!-- <button type="button" class="btn btn-link px-2"
-                                     onclick="location.href='Url.Action("EditProductCart", "ProductCart",new{cartId=item.CartId,prodId=item.ProductId,quantity=item.ProductQuantity++})'">
-                                        <i class="fas fa-plus"></i>
-                                                </button>-->
+                                                      
                                 </div>
                                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                                     <h6 class="mb-0">@(item.Product.Price.ToString() + " " + "EGP")</h6>

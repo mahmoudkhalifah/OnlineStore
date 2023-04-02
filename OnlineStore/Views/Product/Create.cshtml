@@ -10,8 +10,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
                 <input asp-for="ProductName" class="form-control" />
@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
-                <select asp-for="Color" class="form-control"></select>
+                <select asp-for="Color"  asp-items="Html.GetEnumSelectList<Colors>()" class="form-control"></select>
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -62,21 +62,21 @@
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
                 </label>
             </div>
+             <div class="form-group">
+                <label asp-for="image1" class="control-label"></label>
+                <input asp-for="image1" type="file" name="Image1" accept="image/png, image/jpeg, image/jpg"/>
+                <span asp-validation-for="image1" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
-                <label asp-for="Image1" class="control-label"></label>
-                @*<input asp-for="Image1" class="form-control" />*@
-                <input type="file" name="Image1" accept="image/png, image/jpeg, image/jpg"/>
-                <span asp-validation-for="Image1" class="text-danger"></span>
+                <label asp-for="image2" class="control-label"></label>
+               <input asp-for="image2" type="file" name="Image2" accept="image/png, image/jpeg, image/jpg"/>
+                <span asp-validation-for="image2" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image2" class="control-label"></label>
-                <input asp-for="Image2" class="form-control" />
-                <span asp-validation-for="Image2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Image3" class="control-label"></label>
-                <input asp-for="Image3" class="form-control" />
-                <span asp-validation-for="Image3" class="text-danger"></span>
+                <label asp-for="image3" class="control-label"></label>
+                <input asp-for="image3" type="file" name="Image3" accept="image/png, image/jpeg, image/jpg"/>
+                <span asp-validation-for="image3" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ReleaseDate" class="control-label"></label>
