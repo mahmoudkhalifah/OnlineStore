@@ -28,10 +28,9 @@ namespace OnlineStore.RepoServices
 
         public ProductCart GetDetails(int CarId, int ProductId)
         {
-            context.Carts.Load();
-            context.Products.Load();
+            
             //  var obj = context.TraineeCourses.Find(TraineeId, CourseId);
-            return context.ProductsCarts.Find(CarId, ProductId);
+            return context.ProductsCarts.Include(x=>x.Product).Include(x=>x.Cart).Where(x=>x.CartId==CarId &&x.ProductId==ProductId).First();
         }
 
         public void Insert(ProductCart productCart)
@@ -42,7 +41,7 @@ namespace OnlineStore.RepoServices
 
         public void UpdateProductCart(ProductCart productCart)
         {
-            context.Entry(productCart).State = EntityState.Modified;
+            context.ProductsCarts.Update(productCart);
             context.SaveChanges();
         }
     }

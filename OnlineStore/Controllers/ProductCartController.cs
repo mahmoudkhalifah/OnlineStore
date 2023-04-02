@@ -110,16 +110,36 @@ namespace OnlineStore.Controllers
             }
 
         }
+       
+        public ActionResult EditProductCart(int cartId,int prodId,int quantity)
+        {
+            try
+            {
+                ProductCart product = productCartRepository.GetDetails(cartId, prodId);
+                product.CartId = cartId;
+                product.ProductId = prodId;
+                product.ProductQuantity= quantity;
+                
+                productCartRepository.UpdateProductCart(product);
+               
+                return  RedirectToAction("Index", "Cart", new { area = "", id = cartId});
+            }
+            catch
+            {
+                return Problem("Can't Edit");
+            }
+
+        }
 
         // GET: ProductCartController/Delete/5
-        public ActionResult Delete(int CarId, int ProductId)
+        public ActionResult Delete(int? CarId, int? ProductId)
         {
             if (CarId == null||ProductId==null)
             {
                 return NotFound();
             }
 
-            ProductCart productCart = productCartRepository.GetDetails(CarId, ProductId);
+            ProductCart productCart = productCartRepository.GetDetails((int)CarId,(int) ProductId);
 
             if (productCart == null)
             {
@@ -130,9 +150,9 @@ namespace OnlineStore.Controllers
         }
 
         // POST: ProductCartController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int CartId, int ProductId, ProductCart pc)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int CartId, int ProductId)
         {
            
             productCartRepository.DeleteProductCart(CartId, ProductId);
