@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 
 namespace OnlineStore.Models
@@ -47,6 +48,13 @@ namespace OnlineStore.Models
         public byte[]? Image2 { set; get; }
         public byte[]? Image3 { set; get; }
 
+        [NotMapped]
+        public IFormFile? image1 { get; set; }
+        [NotMapped]
+        public IFormFile? image2 { get; set; }
+        [NotMapped]
+        public IFormFile? image3 { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { set; get; } = DateTime.Now;
         //byte[] imgdata = System.IO.File.ReadAllBytes(HttpContext.Current.Server.MapPath(path));
@@ -71,6 +79,10 @@ namespace OnlineStore.Models
             {
                 string img = Convert.ToBase64String(bytes, 0, bytes.Length);
                 url = "data:image/jpeg;base64," + img;
+            }
+            if (bytes==null)
+            {
+                url = "~/NoImage.png";
             }
             return url;
         }

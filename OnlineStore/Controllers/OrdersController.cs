@@ -10,15 +10,17 @@ using System.Data;
 
 namespace OnlineStore.Controllers
 {
-    [Authorize(Roles = "Admin")]
+   // [Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         public IOrderRepository OrderRepository { get; }
         public ICustomerRepository CustomerRepository { get; }
-        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository)
+        public IProductOrderRepository ProductOrderRepository { get; }
+        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository, IProductOrderRepository productOrderRepository)
         {
             OrderRepository = orderRepository;
             CustomerRepository = customerRepository;
+            ProductOrderRepository = productOrderRepository;
         }
 
         // GET: OrdersController
@@ -47,8 +49,13 @@ namespace OnlineStore.Controllers
         {
             try
             {
-                OrderRepository.Insert(order);
-                return RedirectToAction(nameof(Index));
+                if (ProductOrderRepository.InsertList(order.ProductOrders)==1 && OrderRepository.Insert(order)==1)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
+                return View(order);
+
             }
             catch
             {
@@ -121,6 +128,13 @@ namespace OnlineStore.Controllers
         {
             try
             {
+                Order order= OrderRepository.GetDetails(id);
+
+                foreach(var item in order.ProductOrders)
+                {
+                    ProductOrderRepository.DeleteProductOrders(id, item.ProductId);
+                }
+               
                 OrderRepository.DeleteOrder(id);
                 return RedirectToAction(nameof(Index));
             }
