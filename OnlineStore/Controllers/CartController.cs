@@ -19,15 +19,16 @@ namespace OnlineStore.Controllers
             CustomerRepository = customerRepository;
         }
         // GET: CartController
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
-            return View(cartRepository.GetAll());
+            ViewBag.Cart = cartRepository.GetDetails(id);
+            return View();
         }
 
         // GET: CartController/Details/5
         public ActionResult Details(int id)
         {
-            return View(cartRepository.GetDetails(id));
+            return View();
         }
 
         // GET: CartController/Create
