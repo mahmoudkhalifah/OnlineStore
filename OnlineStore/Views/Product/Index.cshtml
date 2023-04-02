@@ -54,6 +54,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ReleaseDate)
             </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Categories)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -91,16 +94,21 @@
                 @Html.DisplayFor(modelItem => item.IsDeleted)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image1)
+                   <img style="width:50%;height:50%;" src=@(item.StringFromByteArray(item.Image1))  alt=@item.ProductName>
+
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image2)
+                   <img style="width:50%;height:50%;" src=@(item.StringFromByteArray(item.Image2))  alt=@item.ProductName>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image3)
+                    <img style="width:50%;height:50%;"src=@(item.StringFromByteArray(item.Image3))  alt=@item.ProductName>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+             <td>
+                   <span>@item.CategoryString()</span>
+               
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |

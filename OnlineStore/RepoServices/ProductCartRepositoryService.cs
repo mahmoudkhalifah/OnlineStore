@@ -29,7 +29,7 @@ namespace OnlineStore.RepoServices
         public ProductCart GetDetails(int CarId, int ProductId)
         {
             
-            //  var obj = context.TraineeCourses.Find(TraineeId, CourseId);
+       
             return context.ProductsCarts.Include(x=>x.Product).Include(x=>x.Cart).Where(x=>x.CartId==CarId &&x.ProductId==ProductId).First();
         }
 

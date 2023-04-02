@@ -36,6 +36,7 @@ namespace OnlineStore
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepoService>();
+            builder.Services.AddScoped<IProductOrderRepository, ProductOrderRepoService>();
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IProductCartRepository, ProductCartRepositoryService>();
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿    using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Protocol.Core.Types;
@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using OnlineStore.RepoServices;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using EllipticCurve.Utils;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace OnlineStore.Controllers
 {
@@ -15,10 +17,12 @@ namespace OnlineStore.Controllers
     {
         public IOrderRepository OrderRepository { get; }
         public ICustomerRepository CustomerRepository { get; }
-        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository)
+        public IProductOrderRepository ProductOrderRepository { get; }
+        public OrdersController(IOrderRepository orderRepository, ICustomerRepository customerRepository, IProductOrderRepository productOrderRepository)
         {
             OrderRepository = orderRepository;
             CustomerRepository = customerRepository;
+            ProductOrderRepository = productOrderRepository;
         }
 
         // GET: OrdersController
@@ -50,7 +54,61 @@ namespace OnlineStore.Controllers
         {
             return View(OrderRepository.GetDetails(id));
         }
+        public List<ProductOrders> GetProductOrders(List<ProductCart>pcs)
+        {
+            List<ProductOrders> ret = new();
+            foreach(var pc in pcs)
+            {
+                //ret.Add(new ProductOrders() { })
+            }
+            return ret;
+        }
+        // GET: OrdersController/Checkout
+        //[Authorize(Roles = "User")]
+        public ActionResult Checkout(int id)//CustomertId
+        {
+            try
+            {
+                int CustomertId = id;
+                if (CustomertId == 0)
+                    CustomertId = 1;
 
+                //if (order.Customer == null)
+                //    order.Customer = CustomerRepository.GetDetails(order.CustomerId);
+                //order.Products = new(order.Customer.Cart.ProductsList());
+                //TODO: empty cart
+                //ViewBag.orderStates = new SelectList(Enums.OrderState)
+                Customer customer = CustomerRepository.GetDetails(CustomertId);
+                ViewBag.CustomerId = customer.CustomerId;
+                Order order = new Order() { Customer = customer , CustomerId = customer.CustomerId};
+                //return View();
+                return View(order);
+                //return RedirectToAction(nameof(Details) , new { id = order.OrderId });
+            }
+            catch
+            {
+                //ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
+                //return View(order);
+                return View();
+            }
+        }
+        [HttpPost]
+        public ActionResult Checkout( Order order)
+        {
+            try
+            {
+                //here: order is created
+                //TODO: call email
+                //TODO: empty the cart
+                OrderRepository.Insert(order);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
+                return View(order);
+            }
+        }
         // GET: OrdersController/Create
         public ActionResult Create()
         {
@@ -65,8 +123,13 @@ namespace OnlineStore.Controllers
         {
             try
             {
-                OrderRepository.Insert(order);
-                return RedirectToAction(nameof(Index));
+                if (ProductOrderRepository.InsertList(order.ProductOrders)==1 && OrderRepository.Insert(order)==1)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["CustomerId"] = new SelectList(CustomerRepository.GetAll(), "CustomerId", "Fname", order.CustomerId);
+                return View(order);
+
             }
             catch
             {
@@ -139,6 +202,13 @@ namespace OnlineStore.Controllers
         {
             try
             {
+                Order order= OrderRepository.GetDetails(id);
+
+                foreach(var item in order.ProductOrders)
+                {
+                    ProductOrderRepository.DeleteProductOrders(id, item.ProductId);
+                }
+               
                 OrderRepository.DeleteOrder(id);
                 return RedirectToAction(nameof(Index));
             }

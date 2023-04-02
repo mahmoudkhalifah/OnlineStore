@@ -14,7 +14,7 @@ namespace OnlineStore.RepoServices
 
         public List<Product> GetAll()
         {
-            return context.Products.ToList();
+            return context.Products.Include(p=>p.Categories).ToList();
         }
 
         public Product GetDetails(int id)
