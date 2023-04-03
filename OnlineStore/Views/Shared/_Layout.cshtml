@@ -20,86 +20,134 @@
 
 </head>
 <body>
-    @*<header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OnlineStore</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Addresses" asp-action="Index">Addresses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Customers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index"  asp-route-id="1">Carts</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ProductCart" asp-action="Index">Product Carts</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Reports</a>
-                        </li>
-                        <li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Manage Roles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>*@
 
-    <nav class="customNavbar navbar navbar-expand-lg navbar-light shadow-sm py-3 py-lg-0 px-3 px-lg-0">
+    @{
 
-        <a class="navbar-brand ms-lg-5" asp-controller="Home" asp-action="Index">
-            <img class="logo" src="~/css/layout/logo.png" />
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        var user = await UserManager.GetUserAsync(User);
+        IList<String> role;
+        try
+        {
+            role = await UserManager.GetRolesAsync(user);
+            if (role[0] == "Admin" && SignInManager.IsSignedIn(User))
+            {
 
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto py-0">
-                
-                @*<a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                     <header>
+                     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" asp-area="" asp-controller="home" asp-action="index">onlinestore</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarsupportedcontent"
+                            aria-expanded="false" aria-label="toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                                <ul class="navbar-nav flex-grow-1">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="home" asp-action="index">home</a>
+                                    </li>
+                                    
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="categories" asp-action="index">categories</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="orders" asp-action="index">orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="customers" asp-action="index">customers</a>
+                                    </li>
+                                   
+                                     <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="product" asp-action="index">products</a>
+                                    </li>
+                                   
+                                    <li class="nav-item">
+                                      <a class="nav-link text-dark" asp-area="" asp-controller="reports" asp-action="index">reports</a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="roles" asp-action="index">manage roles</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="users" asp-action="index">manage users</a>
+                                    </li>
+                                </ul>
+                                <partial name="_loginpartial" />
+                                    </div>
+                                </div>
+                            </nav>
+                        </header>
+
+
+
+            }
+            else
+            {
+                                <nav class="customNavbar navbar navbar-expand-lg navbar-light shadow-sm py-3 py-lg-0 px-3 px-lg-0">
+
+                            <a class="navbar-brand ms-lg-5" asp-controller="Home" asp-action="Index">
+                                <img class="logo" src="~/css/layout/logo.png" />
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarCollapse">
+                                <div class="navbar-nav ms-auto py-0">
+
+                            @*<a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
                 <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
 
-                <a class="text-white nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                
-                <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="AboutUs">About</a>
-                <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="ContactUs">Contact</a>
-                <a href="tel:+123456789" class="nav-item nav-link nav-contact bg-secondary text-white px-5 ms-lg-5"><i class="bi bi-telephone-outbound me-2"></i>+123 456 789</a>
-            </div>
-            <partial name="_LoginPartial" />
-        </div>
-    </nav>
+                                    <a class="text-white nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
 
+                                    <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="AboutUs">About</a>
+                                    <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                                    <a href="tel:+123456789" class="nav-item nav-link nav-contact bg-secondary text-white px-5 ms-lg-5"><i class="bi bi-telephone-outbound me-2"></i>+123 456 789</a>
+                                </div>
+                                <partial name="_LoginPartial" />
+                            </div>
+                        </nav>
+
+
+            }
+
+
+        }
+        catch
+        {
+                    <nav class="customNavbar navbar navbar-expand-lg navbar-light shadow-sm py-3 py-lg-0 px-3 px-lg-0">
+
+                                    <a class="navbar-brand ms-lg-5" asp-controller="Home" asp-action="Index">
+                                        <img class="logo" src="~/css/layout/logo.png" />
+                                    </a>
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+
+                                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                                        <div class="navbar-nav ms-auto py-0">
+
+                        @*<a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
+
+                                            <a class="text-white nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
+
+                                            <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="AboutUs">About</a>
+                                            <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                                            <a href="tel:+123456789" class="nav-item nav-link nav-contact bg-secondary text-white px-5 ms-lg-5"><i class="bi bi-telephone-outbound me-2"></i>+123 456 789</a>
+                                        </div>
+                                        <partial name="_LoginPartial" />
+                                    </div>
+                                </nav>
+
+           
+        }
+
+    }
+        
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+       
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light mt-5 py-5 wow fadeInUp" data-wow-delay="0.1s">

@@ -6,7 +6,7 @@ using System.Data;
 
 namespace OnlineStore.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class ReportsController : Controller
     {
         IReportsRepository ReportsRepository;

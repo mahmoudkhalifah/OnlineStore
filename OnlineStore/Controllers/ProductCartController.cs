@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineStore.Models;
 using OnlineStore.RepoServices;
+using System.Data;
 
 namespace OnlineStore.Controllers
 {
@@ -19,6 +21,7 @@ namespace OnlineStore.Controllers
             this.cartRepository = cartRepository;
         }
         // GET: ProductCartController
+        [Authorize(Roles = "None")]
         public ActionResult Index()
         {
             return View(productCartRepository.GetAll());

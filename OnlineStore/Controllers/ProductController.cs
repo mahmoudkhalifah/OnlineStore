@@ -35,6 +35,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: ProductController/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewData["Categories"] = new MultiSelectList(categoryRepository.GetAll(), "CategoryId", "CategoryName");
@@ -44,6 +45,7 @@ namespace OnlineStore.Controllers
         // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Product product,IFormCollection collection)
         {
             if (ModelState.IsValid)
@@ -110,6 +112,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: ProductController/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
            
@@ -121,6 +124,7 @@ namespace OnlineStore.Controllers
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(Product product, IFormCollection collection)
         {
             if (ModelState.IsValid)
@@ -186,6 +190,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: ProductController/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(bool? saveChangesError = false, int id = 0)
         {
             if (saveChangesError.GetValueOrDefault())
@@ -199,6 +204,7 @@ namespace OnlineStore.Controllers
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             try

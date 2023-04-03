@@ -32,8 +32,10 @@ namespace OnlineStore.Controllers
         }
 
         // GET: OrdersController
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
+           
             return View(OrderRepository.GetAll());
         }
         [HttpPost]
@@ -88,14 +90,12 @@ namespace OnlineStore.Controllers
             try
             {
                 int CustomertId = id;
-                //if (CustomertId == 0)
-                //    CustomertId = 1;
-
-                //if (order.Customer == null)
-                //    order.Customer = CustomerRepository.GetDetails(order.CustomerId);
-                //order.Products = new(order.Customer.Cart.ProductsList());
-                //ViewBag.orderStates = new SelectList(Enums.OrderState)
+               
                 Customer customer = CustomerRepository.GetDetails(CustomertId);
+                if (customer.Addresses.Count == 0)
+                {
+                    return RedirectToAction("Create", "Addresses", new { id = customer.CustomerId});
+                }
                 ViewBag.CustomerId = customer.CustomerId;
                 Order order = new Order() { Customer = customer , CustomerId = customer.CustomerId};
                 //return View();
@@ -144,6 +144,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: OrdersController/Create
+        [Authorize(Roles = "User")]
         public ActionResult Create()
         {
             ViewBag.customers = CustomerRepository.GetAll();
@@ -153,6 +154,7 @@ namespace OnlineStore.Controllers
         // POST: OrdersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public ActionResult Create(Order order)
         {
             try
@@ -173,6 +175,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: OrdersController/Edit/5
+        [Authorize(Roles = "User")]
         public ActionResult Edit(int id)
         {
             if (id == null)
@@ -192,6 +195,7 @@ namespace OnlineStore.Controllers
         // POST: OrdersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public ActionResult Edit(int id, Order order)
         {
             if (ModelState.IsValid)
@@ -211,6 +215,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: OrdersController/Delete/5
+        [Authorize(Roles = "None")]
         public ActionResult Delete(int id)
         {
 
@@ -232,6 +237,7 @@ namespace OnlineStore.Controllers
         // POST: OrdersController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "None")]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try

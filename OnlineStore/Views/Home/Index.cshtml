@@ -31,116 +31,128 @@
 
 <link href="~/css/home/css/style.css" rel="stylesheet" />
 
-<div class="filter">
-    <form asp-action="Filter" method="post">
-        
-        <select class="form-select-sm" name="catID"
+@{
+
+    var user = await UserManager.GetUserAsync(User);
+    IList<String> role;
+    try
+    {
+        role = await UserManager.GetRolesAsync(user);
+        if (role[0] == "Admin" && SignInManager.IsSignedIn(User))
+        {
+        }
+        else
+        {
+            <div class="filter">
+                <form asp-action="Filter" method="post">
+
+                    <select class="form-select-sm" name="catID"
                 asp-items="new SelectList(categories, nameof(Category.CategoryId),
                    nameof(Category.CategoryName))">
-        </select>
+                    </select>
 
 
-    <input type="number" name="minPrice" min="1" placeholder="Min Price" class="priceFilter">
-    <input type="number" name="maxPrice" min="1" placeholder="Max Price" class="priceFilter">
-    <input type="submit" value="Apply"  />
-    </form>
+                <input type="number" name="minPrice" min="1" placeholder="Min Price" class="priceFilter">
+                <input type="number" name="maxPrice" min="1" placeholder="Max Price" class="priceFilter">
+                <input type="submit" value="Apply"  />
+                </form>
 
-        <!-- Another variation with a button -->
-        <form asp-action="SearchProducts" method="post">
-        <div class="input-group searchBar">
-            <input type="text" name="productName" class="form-control" placeholder="Search this blog">
-            <div class="input-group-append">
-                <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
-                    <i class="fa fa-search"></i>
-                </button>
-            </div>
-        </div>
-        </form>
-    <button class="btn-primary" onclick="location.href='@Url.Action("Index", "Cart",new{id=customer.CartId})'" >Cart</button>
-</div>
-
-
-
-
-<!-- Most Popular -->
-<div>
-
-                <div class="container">
-
-                    <h1 class="fashion_taital">Most Popular</h1>
-                    <div class="fashion_section_2">
-                    <div class="row">
-
-                            @{
-                                for (int i = 0;i<mostPopular.Count;i++)
-                                {
-                                    if(i >= 3)
-                                    {
-                                        break;
-                                    }
-                                    <div class="col-lg-4 col-sm-4">
-                                        <div class="box_main">
-                                            <h4 class="shirt_text">@mostPopular[i].ProductName</h4>
-                                            <p class="price_text">Price  <span style="color: #262626;">@mostPopular[i].Price</span></p>
-                                            <div class="tshirt_img"><img src=@(mostPopular[i].StringFromByteArray(mostPopular[i].Image1))></div>
-                                            <div class="btn_main">
-                                    <div class="buy_bt"> @Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=mostPopular[i].ProductID})</div>
-                                                <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@mostPopular[i].ProductID">See More</a> </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            }
-
-                        }
-
+                    <!-- Another variation with a button -->
+                    <form asp-action="SearchProducts" method="post">
+                    <div class="input-group searchBar">
+                        <input type="text" name="productName" class="form-control" placeholder="Search this blog">
+                        <div class="input-group-append">
+                            <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </div>
-                </div>
+                    </form>
+                <button class="btn-primary" onclick="location.href='@Url.Action("Index", "Cart",new{id=customer.CartId})'" >Cart</button>
             </div>
 
 
 
 
-<!-- Best Sellers -->
+            <!-- Most Popular -->
+            <div>
 
-                <div class="container">
-                    <h1 class="fashion_taital">Best Sellers</h1>
-                    <div class="fashion_section_2">
-                        <div class="row">
+                            <div class="container">
+
+                                <h1 class="fashion_taital">Most Popular</h1>
+                                <div class="fashion_section_2">
+                                <div class="row">
 
                             @{
-                                for (int i = 0; i < mostExpensive.Count; i++)
+                                for (int i = 0; i < mostPopular.Count; i++)
                                 {
                                     if (i >= 3)
                                     {
                                         break;
                                     }
-                                    <div class="col-lg-4 col-sm-4">
-                                        <div class="box_main">
-                                            <h4 class="shirt_text">@mostExpensive[i].ProductName</h4>
-                                            <p class="price_text">Price  <span style="color: #262626;">@mostExpensive[i].Price</span></p>
-                                        <div class="tshirt_img"><img src=@(mostExpensive[i].StringFromByteArray(mostExpensive[i].Image1))></div>
-                                            <div class="btn_main">
-                                <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=mostExpensive[i].ProductID})</div>
-                                            <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@mostExpensive[i].ProductID">See More</a> </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                        <div class="col-lg-4 col-sm-4">
+                                                            <div class="box_main">
+                                                                <h4 class="shirt_text">@mostPopular[i].ProductName</h4>
+                                                                <p class="price_text">Price  <span style="color: #262626;">@mostPopular[i].Price</span></p>
+                                                                <div class="tshirt_img"><img src=@(mostPopular[i].StringFromByteArray(mostPopular[i].Image1))></div>
+                                                                <div class="btn_main">
+                                                        <div class="buy_bt"> @Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=mostPopular[i].ProductID})</div>
+                                                                    <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@mostPopular[i].ProductID">See More</a> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                 }
 
                             }
 
-                        </div>
-                    </div>
-                </div>
+                                    </div>
+                                </div>
+                            </div>
+            </div>
 
 
 
-<!-- Recent -->
+
+            <!-- Best Sellers -->
+
             <div class="container">
-                <h1 class="fashion_taital">Recent</h1>
-                <div class="fashion_section_2">
-                    <div class="row">
+                                <h1 class="fashion_taital">Best Sellers</h1>
+                                <div class="fashion_section_2">
+                                    <div class="row">
+
+                        @{
+                            for (int i = 0; i < mostExpensive.Count; i++)
+                            {
+                                if (i >= 3)
+                                {
+                                    break;
+                                }
+                                                        <div class="col-lg-4 col-sm-4">
+                                                            <div class="box_main">
+                                                                <h4 class="shirt_text">@mostExpensive[i].ProductName</h4>
+                                                                <p class="price_text">Price  <span style="color: #262626;">@mostExpensive[i].Price</span></p>
+                                                            <div class="tshirt_img"><img src=@(mostExpensive[i].StringFromByteArray(mostExpensive[i].Image1))></div>
+                                                                <div class="btn_main">
+                                                    <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=mostExpensive[i].ProductID})</div>
+                                                                <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@mostExpensive[i].ProductID">See More</a> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                            }
+
+                        }
+
+                                    </div>
+                                </div>
+            </div>
+
+
+
+            <!-- Recent -->
+            <div class="container">
+                            <h1 class="fashion_taital">Recent</h1>
+                            <div class="fashion_section_2">
+                                <div class="row">
 
                         @{
                             for (int i = 0; i < recent.Count; i++)
@@ -149,31 +161,31 @@
                                 {
                                     break;
                                 }
-                                <div class="col-lg-4 col-sm-4">
-                                    <div class="box_main">
-                                        <h4 class="shirt_text">@recent[i].ProductName</h4>
-                                        <p class="price_text">Price  <span style="color: #262626;">@recent[i].Price</span></p>
-                                        <div class="tshirt_img"><img src=@(recent[i].StringFromByteArray(recent[i].Image1))></div>
-                                        <div class="btn_main">
-                                <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=recent[i].ProductID})</div>
-                                            <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@recent[i].ProductID">See More</a> </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                    <div class="col-lg-4 col-sm-4">
+                                                        <div class="box_main">
+                                                            <h4 class="shirt_text">@recent[i].ProductName</h4>
+                                                            <p class="price_text">Price  <span style="color: #262626;">@recent[i].Price</span></p>
+                                                            <div class="tshirt_img"><img src=@(recent[i].StringFromByteArray(recent[i].Image1))></div>
+                                                            <div class="btn_main">
+                                                    <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=recent[i].ProductID})</div>
+                                                                <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@recent[i].ProductID">See More</a> </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                             }
 
                         }
 
-                    </div>
-                </div>
+                                </div>
+                            </div>
             </div>
 
-<!-- Cheapest -->
+            <!-- Cheapest -->
 
             <div class="container">
-                <h1 class="fashion_taital">Cheapest</h1>
-                <div class="fashion_section_2">
-                    <div class="row">
+                            <h1 class="fashion_taital">Cheapest</h1>
+                            <div class="fashion_section_2">
+                                <div class="row">
 
                         @{
                             for (int i = 0; i < cheapest.Count; i++)
@@ -182,27 +194,27 @@
                                 {
                                     break;
                                 }
-                                <div class="col-lg-4 col-sm-4">
-                                    <div class="box_main">
-                                        <h4 class="shirt_text">@cheapest[i].ProductName</h4>
-                                        <p class="price_text">Price  <span style="color: #262626;">@cheapest[i].Price</span></p>
-                                        <div class="tshirt_img"><img src=@(cheapest[i].StringFromByteArray(cheapest[i].Image1))></div>
-                                        <div class="btn_main">
-                                <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=cheapest[i].ProductID})</div>
-                                            <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@cheapest[i].ProductID">See More</a> </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                    <div class="col-lg-4 col-sm-4">
+                                                        <div class="box_main">
+                                                            <h4 class="shirt_text">@cheapest[i].ProductName</h4>
+                                                            <p class="price_text">Price  <span style="color: #262626;">@cheapest[i].Price</span></p>
+                                                            <div class="tshirt_img"><img src=@(cheapest[i].StringFromByteArray(cheapest[i].Image1))></div>
+                                                            <div class="btn_main">
+                                                    <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=cheapest[i].ProductID})</div>
+                                                                <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@cheapest[i].ProductID">See More</a> </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                             }
 
                         }
 
-                    </div>
-                </div>
+                                </div>
+                            </div>
 
-</div>
+            </div>
 
-           @*
+            @*
         <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
             <i class="fa fa-angle-left"></i>
         </a>
@@ -212,7 +224,203 @@
         *@
 
 
-       @* <a class="carousel-control-prev" href="#jewellery_main_slider" role="button" data-slide="prev">
+            @* <a class="carousel-control-prev" href="#jewellery_main_slider" role="button" data-slide="prev">
+            <i class="fa fa-angle-left"></i>
+        </a>
+        <a class="carousel-control-next" href="#jewellery_main_slider" role="button" data-slide="next">
+            <i class="fa fa-angle-right"></i>
+        </a>*@
+            @*<div class="loader_main">
+            <div class="loader"></div>
+        </div>*@
+
+
+            
+        }
+    }
+    catch{
+        <div class="filter">
+            <form asp-action="Filter" method="post">
+
+                <select class="form-select-sm" name="catID"
+                asp-items="new SelectList(categories, nameof(Category.CategoryId),
+                   nameof(Category.CategoryName))">
+                </select>
+
+
+            <input type="number" name="minPrice" min="1" placeholder="Min Price" class="priceFilter">
+            <input type="number" name="maxPrice" min="1" placeholder="Max Price" class="priceFilter">
+            <input type="submit" value="Apply"  />
+            </form>
+
+                <!-- Another variation with a button -->
+                <form asp-action="SearchProducts" method="post">
+                <div class="input-group searchBar">
+                    <input type="text" name="productName" class="form-control" placeholder="Search this blog">
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary" type="submit" style="background-color: #f26522; border-color:#f26522 ">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                </form>
+            <button class="btn-primary" onclick="location.href='@Url.Action("Index", "Cart",new{id=customer.CartId})'" >Cart</button>
+        </div>
+
+
+
+
+        <!-- Most Popular -->
+        <div>
+
+                        <div class="container">
+
+                            <h1 class="fashion_taital">Most Popular</h1>
+                            <div class="fashion_section_2">
+                            <div class="row">
+
+                        @{
+                            for (int i = 0; i < mostPopular.Count; i++)
+                            {
+                                if (i >= 3)
+                                {
+                                    break;
+                                }
+                                                    <div class="col-lg-4 col-sm-4">
+                                                        <div class="box_main">
+                                                            <h4 class="shirt_text">@mostPopular[i].ProductName</h4>
+                                                            <p class="price_text">Price  <span style="color: #262626;">@mostPopular[i].Price</span></p>
+                                                            <div class="tshirt_img"><img src=@(mostPopular[i].StringFromByteArray(mostPopular[i].Image1))></div>
+                                                            <div class="btn_main">
+                                                    <div class="buy_bt"> @Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=mostPopular[i].ProductID})</div>
+                                                                <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@mostPopular[i].ProductID">See More</a> </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                            }
+
+                        }
+
+                                </div>
+                            </div>
+                        </div>
+        </div>
+
+
+
+
+        <!-- Best Sellers -->
+
+        <div class="container">
+                            <h1 class="fashion_taital">Best Sellers</h1>
+                            <div class="fashion_section_2">
+                                <div class="row">
+
+                    @{
+                        for (int i = 0; i < mostExpensive.Count; i++)
+                        {
+                            if (i >= 3)
+                            {
+                                break;
+                            }
+                                                    <div class="col-lg-4 col-sm-4">
+                                                        <div class="box_main">
+                                                            <h4 class="shirt_text">@mostExpensive[i].ProductName</h4>
+                                                            <p class="price_text">Price  <span style="color: #262626;">@mostExpensive[i].Price</span></p>
+                                                        <div class="tshirt_img"><img src=@(mostExpensive[i].StringFromByteArray(mostExpensive[i].Image1))></div>
+                                                            <div class="btn_main">
+                                                <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=mostExpensive[i].ProductID})</div>
+                                                            <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@mostExpensive[i].ProductID">See More</a> </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                        }
+
+                    }
+
+                                </div>
+                            </div>
+        </div>
+
+
+
+        <!-- Recent -->
+        <div class="container">
+                        <h1 class="fashion_taital">Recent</h1>
+                        <div class="fashion_section_2">
+                            <div class="row">
+
+                    @{
+                        for (int i = 0; i < recent.Count; i++)
+                        {
+                            if (i >= 3)
+                            {
+                                break;
+                            }
+                                                <div class="col-lg-4 col-sm-4">
+                                                    <div class="box_main">
+                                                        <h4 class="shirt_text">@recent[i].ProductName</h4>
+                                                        <p class="price_text">Price  <span style="color: #262626;">@recent[i].Price</span></p>
+                                                        <div class="tshirt_img"><img src=@(recent[i].StringFromByteArray(recent[i].Image1))></div>
+                                                        <div class="btn_main">
+                                                <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=recent[i].ProductID})</div>
+                                                            <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@recent[i].ProductID">See More</a> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        }
+
+                    }
+
+                            </div>
+                        </div>
+        </div>
+
+        <!-- Cheapest -->
+
+        <div class="container">
+                        <h1 class="fashion_taital">Cheapest</h1>
+                        <div class="fashion_section_2">
+                            <div class="row">
+
+                    @{
+                        for (int i = 0; i < cheapest.Count; i++)
+                        {
+                            if (i >= 3)
+                            {
+                                break;
+                            }
+                                                <div class="col-lg-4 col-sm-4">
+                                                    <div class="box_main">
+                                                        <h4 class="shirt_text">@cheapest[i].ProductName</h4>
+                                                        <p class="price_text">Price  <span style="color: #262626;">@cheapest[i].Price</span></p>
+                                                        <div class="tshirt_img"><img src=@(cheapest[i].StringFromByteArray(cheapest[i].Image1))></div>
+                                                        <div class="btn_main">
+                                                <div class="buy_bt">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=cheapest[i].ProductID})</div>
+                                                            <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@cheapest[i].ProductID">See More</a> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        }
+
+                    }
+
+                            </div>
+                        </div>
+
+        </div>
+
+        @*
+        <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
+            <i class="fa fa-angle-left"></i>
+        </a>
+        <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
+            <i class="fa fa-angle-right"></i>
+        </a>
+        *@
+
+
+        @* <a class="carousel-control-prev" href="#jewellery_main_slider" role="button" data-slide="prev">
             <i class="fa fa-angle-left"></i>
         </a>
         <a class="carousel-control-next" href="#jewellery_main_slider" role="button" data-slide="next">
@@ -221,4 +429,10 @@
         @*<div class="loader_main">
             <div class="loader"></div>
         </div>*@
+
+
+        
+    }
+
+ }
 

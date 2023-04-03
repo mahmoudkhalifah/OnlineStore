@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Data;
 using OnlineStore.Models;
+using Microsoft.AspNetCore.Authorization;
+
 namespace OnlineStore.Controllers
 {
+    
     public class AddressesController : Controller
     {
         public IAddressRepository addressRepo { get;}
@@ -22,6 +25,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: Addresses
+        [Authorize(Roles = "None")]
         public  ActionResult Index()
         {
            

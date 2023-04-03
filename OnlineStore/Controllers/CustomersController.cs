@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,6 +34,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: Customers
+        [Authorize(Roles = "Admin")]
         public  ActionResult Index()
         {
             return View(customerRepo.GetAll());
@@ -52,6 +55,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: Customers/Create
+        [Authorize(Roles = "User")]
         public async Task< IActionResult> Create()
         {
 
@@ -75,6 +79,7 @@ namespace OnlineStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         //CustomerId,Fname,Lname,Gender,PhoneNumber,CartId"
         public async Task<IActionResult> Create([Bind("CustomerId,Fname,Lname,Gender,PhoneNumber")] Customer customer)
         {
@@ -95,6 +100,7 @@ namespace OnlineStore.Controllers
         }
 
         // GET: Customers/Edit/5
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -116,6 +122,7 @@ namespace OnlineStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Edit(int id, [Bind("CustomerId,Fname,Lname,Gender,PhoneNumber,CartId")] Customer customer)
         {
             if (id != customer.CustomerId)
