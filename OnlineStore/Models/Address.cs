@@ -24,6 +24,17 @@ namespace OnlineStore.Models
         [MaxLength(100,ErrorMessage ="Reached maximum number of characters (100)")]
         public string? NearestLandmark { get; set; }
 
+        public string address
+        {
+            get
+            {
+                return this.ToString();
+            }
+        }
+        public override string ToString()
+        {
+            return $"{City} - {Governorate} - {Country}\n\n";
+        }
         [ForeignKey("Customer")]
         public  int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }

@@ -75,10 +75,10 @@ namespace OnlineStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,Fname,Lname,Gender,PhoneNumber,CartId")] Customer customer)
+        //CustomerId,Fname,Lname,Gender,PhoneNumber,CartId"
+        public async Task<IActionResult> Create([Bind("CustomerId,Fname,Lname,Gender,PhoneNumber")] Customer customer)
         {
-            if (ModelState.IsValid)
-            {
+
                 try
                 {
                     if (customerRepo.Insert(customer) == 1)
@@ -91,9 +91,7 @@ namespace OnlineStore.Controllers
                     return View(customer);
                 }
 
-            }
-            ViewData["CartId"] = new SelectList(cartRepo.GetAll(), "CartId", "CartId" ,customer.CartId);
-            return View(customer);
+            
         }
 
         // GET: Customers/Edit/5

@@ -45,6 +45,7 @@ namespace OnlineStore.RepoServices
             
             try
             {
+                
                 Context.Orders.Add(order);
                 Context.SaveChanges();
                 return 1;
@@ -69,6 +70,7 @@ namespace OnlineStore.RepoServices
                 order1.OrderState = order.OrderState;
                 order1.Bill = order.Bill;
                 order1.PaymentMethod = order.PaymentMethod;
+                order1.ProductOrders = order.ProductOrders;
                 Context.SaveChanges();
                 return 1;
             }
