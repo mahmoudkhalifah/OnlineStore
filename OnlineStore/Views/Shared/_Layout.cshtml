@@ -78,14 +78,20 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
+                
+                @*<a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>*@
+
                 <a class="text-white nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                <a class="text-white nav-item nav-link" asp-controller="" asp-action="">Cart</a>
+                <a class="text-white nav-item nav-link" asp-controller="Cart" asp-action="Index" asp-route-id="1">Cart</a>
                 <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="AboutUs">About</a>
                 <a class="text-white nav-item nav-link" asp-controller="Home" asp-action="ContactUs">Contact</a>
                 <a href="tel:+123456789" class="nav-item nav-link nav-contact bg-secondary text-white px-5 ms-lg-5"><i class="bi bi-telephone-outbound me-2"></i>+123 456 789</a>
             </div>
+            <partial name="_LoginPartial" />
         </div>
     </nav>
 
