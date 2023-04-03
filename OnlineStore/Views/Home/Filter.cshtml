@@ -5,6 +5,8 @@
     List<Product> products = Model.ToList();
 
     List<Category> categories = ViewBag.categories;
+
+    Customer customer = ViewBag.customer;
 }
 
 <link href="~/css/home/css/bootstrap.css" rel="stylesheet" />
@@ -55,6 +57,8 @@
             </div>
         </div>
     </form>
+
+    <button class="btn-primary" onclick="location.href='@Url.Action("Index", "Cart",new{id=customer.CartId})'">Cart</button>
 </div>
 
 
@@ -73,7 +77,7 @@
                                             <p class="price_text">Price  <span style="color: #262626;">@products[i].Price</span></p>
                                             <div class="tshirt_img"><img src=@(products[i].StringFromByteArray(products[i].Image1))></div>
                                             <div class="btn_main">
-                                                <div class="buy_bt"><a href="#">Buy Now</a></div>
+                                <div class="buy_bt">">@Html.ActionLink("Add To Cart","Create" ,"ProductCart", new { cartId=customer.CartId, productId=products[i].ProductID})</div>
                                                 <div class="seemore_bt"><a asp-action="GetProductDetails" asp-route-id="@products[i].ProductID">See More</a> </div>
                                             </div>
                                         </div>

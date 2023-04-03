@@ -21,6 +21,8 @@ namespace OnlineStore.Controllers
         // GET: CartController
         public ActionResult Index(int id)
         {
+            if (id == 0)
+               return Redirect("~/Identity/Account/Login");
             ViewBag.Cart = cartRepository.GetDetails(id);
             return View();
         }

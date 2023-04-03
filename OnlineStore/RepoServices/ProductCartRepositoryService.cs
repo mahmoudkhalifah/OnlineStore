@@ -28,9 +28,16 @@ namespace OnlineStore.RepoServices
 
         public ProductCart GetDetails(int CarId, int ProductId)
         {
-            
+            try
+            {
+            return context.ProductsCarts.Include(x=>x.Product).Include(x=>x.Cart).ThenInclude(cc=>cc.Customer).Where(x=>x.CartId==CarId &&x.ProductId==ProductId).FirstOrDefault();
+
+            }
+            catch
+            {
+                return new ProductCart();
+            }
        
-            return context.ProductsCarts.Include(x=>x.Product).Include(x=>x.Cart).Where(x=>x.CartId==CarId &&x.ProductId==ProductId).First();
         }
 
         public void Insert(ProductCart productCart)

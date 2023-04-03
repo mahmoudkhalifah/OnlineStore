@@ -30,35 +30,58 @@ namespace OnlineStore.Controllers
             var obj = productCartRepository.GetDetails(CartId, ProductId);
             return View(productCartRepository.GetDetails(CartId, ProductId));
             
-            return View(productCartRepository.GetDetails(CartId, ProductId));
+           
 
         }
 
         // GET: ProductCartController/Create
-        public ActionResult Create()
+        public ActionResult Create(int cartId, int productId)
         {
-            ViewData["ProductId"] = new SelectList(productRepository.GetAll(), "ProductID", "ProductName");
-            ViewData["CartId"] = new SelectList(cartRepository.GetAll(), "CartId", "CartId");
 
-            return View();
+            if(cartId == 0)
+            {
+                return Redirect("~/Identity/Account/Login");
+            }
+
+            Cart c = cartRepository.GetDetails(cartId);
+            ProductCart cart = productCartRepository.GetDetails(cartId, productId);
+            try
+            {
+                if (cart == null)
+                {
+                    productCartRepository.Insert(new ProductCart() { CartId = cartId, ProductId = productId, ProductQuantity = 1 });
+
+                }
+                else
+                {
+                    cart.ProductQuantity++;
+                    productCartRepository.UpdateProductCart(cart);
+                }
+                
+            }
+            catch
+            {
+                
+            }
+            return RedirectToAction("Index", "Home", new {id=c.Customer.CustomerId});
         }
 
         // POST: ProductCartController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(ProductCart productCart)
-        {
-            if (ModelState.IsValid)
-            {
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(ProductCart productCart)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
 
-                try { productCartRepository.Insert(productCart); }
-                catch
-                {
-                    return Problem("Cant Create");
-                }
-            }
-            return RedirectToAction("Index");
-        }
+        //        try { productCartRepository.Insert(productCart); }
+        //        catch
+        //        {
+        //            return Problem("Cant Create");
+        //        }
+        //    }
+        //    return RedirectToAction("Index");
+        //}
 
         // GET: ProductCartController/Edit/5
         public ActionResult Edit(int CartId, int ProductId)

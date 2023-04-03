@@ -20,7 +20,7 @@ namespace OnlineStore.Controllers
         public IProductRepository ProductRepository { get; set; }
         public ICategoryRepository CategoryRepository { get; set; }
         public List<Product> products = new List<Product>();
-
+        public static Customer customer;
 
         public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager, ICustomerRepository custrepo, IProductRepository productRepository, ICategoryRepository categoryRepository)
         {
@@ -35,12 +35,23 @@ namespace OnlineStore.Controllers
 
         public IActionResult Index(int id)
         {
-            if(_signInManager.IsSignedIn(User))
+            
+            if (_signInManager.IsSignedIn(User))
             {
-                var customer = customerRepo.GetAll().Where(e => e.Email == _userManager.GetUserAsync(User).Result.Email).FirstOrDefault();
+                customer = customerRepo.GetAll().Where(e => e.Email == _userManager.GetUserAsync(User).Result.Email).FirstOrDefault();
                 id = customer.CustomerId;
             }
-            
+            else if(id != 0)
+            {
+                customer = customerRepo.GetDetails(id);
+
+            }
+            else
+            {
+                customer = new Customer() { CustomerId=0 };
+            }
+
+            ViewBag.customer = customer;
  
             if (products.Any())
             {
@@ -68,6 +79,8 @@ namespace OnlineStore.Controllers
             [HttpPost]
         public IActionResult Filter(int? catID , int? minPrice,int? maxPrice)
         {
+            ViewBag.customer = customer;
+
             List<Product> filtered = new List<Product>();
             if (catID != null)
             {
@@ -93,6 +106,7 @@ namespace OnlineStore.Controllers
         [HttpPost]
         public IActionResult SearchProducts(string productName)
         {
+            ViewBag.customer = customer;
             List<Product> filtered = new List<Product>();
             if(productName != null)
             {

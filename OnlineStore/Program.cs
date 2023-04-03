@@ -22,7 +22,7 @@ namespace OnlineStore
             builder.Services.AddDbContext<MainDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainDBContext") ?? throw new InvalidOperationException("Connection string 'MainDBContext' not found.")));
 
-
+            //builder.Services.AddAuthentication
 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
