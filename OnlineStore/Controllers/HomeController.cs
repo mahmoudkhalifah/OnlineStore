@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineStore.Data;
 using OnlineStore.Models;
+using OnlineStore.RepoServices;
 using System.Diagnostics;
 
 namespace OnlineStore.Controllers
@@ -9,16 +11,29 @@ namespace OnlineStore.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-       
-        public HomeController(ILogger<HomeController> logger)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ICustomerRepository customerRepo { get; }
+
+
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager,
+           
+            SignInManager<ApplicationUser> signInManager, ICustomerRepository custrepo)
         {
             _logger = logger;
+            _userManager = userManager;
+            customerRepo = custrepo;
+            _signInManager = signInManager; 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-
-         
+            if(_signInManager.IsSignedIn(User))
+            {
+                var customer = customerRepo.GetAll().Where(e => e.Email == _userManager.GetUserAsync(User).Result.Email).FirstOrDefault();
+                id = customer.CustomerId;
+            }
+            
             return View();
         }
 

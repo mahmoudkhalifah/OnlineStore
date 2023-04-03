@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using OnlineStore.Models;
+using OnlineStore.RepoServices;
 
 namespace OnlineStore.Areas.Identity.Pages.Account
 {
@@ -22,11 +23,13 @@ namespace OnlineStore.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public ICustomerRepository customerRepo { get; }
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
+             ICustomerRepository custrepo,ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
+            customerRepo = custrepo;
         }
 
         /// <summary>
@@ -117,8 +120,12 @@ namespace OnlineStore.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+
+                    var customer = customerRepo.GetAll().Where(e => e.Email == Input.Email).FirstOrDefault();
+
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("Index", "Home",new {id= customer.CustomerId });
+                    // return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

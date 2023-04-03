@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using OnlineStore.Models;
+using OnlineStore.RepoServices;
 
 namespace OnlineStore.Areas.Identity.Pages.Account
 {
@@ -30,13 +31,16 @@ namespace OnlineStore.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        public ICustomerRepository customerRepo { get; }
+      
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ICustomerRepository custrepo)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +48,7 @@ namespace OnlineStore.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            customerRepo = custrepo;
         }
 
         /// <summary>
@@ -72,9 +77,19 @@ namespace OnlineStore.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            public Gender? Gender { get; set; } = Models.Gender.Female;
+
+
+            [Required]
             [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
+            
+            [Required]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
+            [Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; }
+           
             [Required]
             [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             [Display(Name = "Last Name")]
@@ -124,12 +139,31 @@ namespace OnlineStore.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.Gender = Input.Gender;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+
+                   // var _user = await _userManager.GetUserAsync(User);
+                    bool female = true;
+                    if (user.Gender.Value == Gender.Male) { female = false; }
+
+                    var role = await _userManager.GetRolesAsync(user);
+                    // Cart cart = new Cart();
+                    var customer = new Customer()
+                    {
+                        Fname = user.FirstName,
+                        Lname = user.LastName,
+                        PhoneNumber = user.PhoneNumber,
+                        Gender = female,
+                        Email = user.Email
+                    };
+                    customerRepo.Insert(customer);
+
                     await _userManager.AddToRoleAsync(user, "User");
                     _logger.LogInformation("User created a new account with password.");
 

@@ -36,19 +36,37 @@ namespace OnlineStore.RepoServices
             return Context.Customers.Find(id);
         }
 
+        //public int Insert(Customer customer)
+        //{
+        //    try
+        //    {
+        //        Context.Customers.Add(customer);
+        //        Context.SaveChanges();
+        //        return 1;
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        return 0;
+        //    }
+
+        //}
         public int Insert(Customer customer)
         {
             try
             {
+                Cart cart = new Cart();
+                cart.Customer = customer;
+                customer.Cart = cart;
                 Context.Customers.Add(customer);
+
                 Context.SaveChanges();
                 return 1;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return 0;
             }
-             
+
         }
 
         public int UpdateCustomer(int id, Customer customer)

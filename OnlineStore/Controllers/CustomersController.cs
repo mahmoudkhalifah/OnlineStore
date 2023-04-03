@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,11 +18,17 @@ namespace OnlineStore.Controllers
     {
         public ICartRepository cartRepo { get;}
         public ICustomerRepository customerRepo  { get;}
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-    public CustomersController( ICustomerRepository custrepo, ICartRepository carrepo)
+
+        public CustomersController( ICustomerRepository custrepo, ICartRepository carrepo, UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             cartRepo = carrepo;
             customerRepo = custrepo;
+            this._userManager = userManager;
+            this._signInManager = _signInManager;
         }
 
         // GET: Customers
@@ -45,8 +52,20 @@ namespace OnlineStore.Controllers
         }
 
         // GET: Customers/Create
-        public IActionResult Create()
+        public async Task< IActionResult> Create()
         {
+
+            //try
+            //{
+            //    if (customerRepo.Insert(customer) == 1)
+            //        return RedirectToAction(nameof(Index));
+            //    else return View(customer); ;
+            //}
+            //catch
+            //{
+            //    ViewData["CartId"] = new SelectList(cartRepo.GetAll(), "CartId", "CartId", customer.CartId);
+            //    return View(customer);
+            //}
             ViewData["CartId"] = new SelectList(cartRepo.GetAll(), "CartId", "CartId");
             return View();
         }

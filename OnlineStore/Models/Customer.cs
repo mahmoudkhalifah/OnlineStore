@@ -15,13 +15,17 @@ namespace OnlineStore.Models
         [NotMapped]
         public string FullName { get => Fname + " " + Lname; }
 
-        [Required]
-        public bool Gender { get; set; }       
+        //[Required]
+        public Nullable<bool> Gender { get; set; }       
         [Required,MinLength(11, ErrorMessage ="Please enter a valid phone number of 11 numbers")]
         public string PhoneNumber { get; set; }
 
         [ForeignKey("Cart")]
         public int CartId { get; set; }
+
+  
+        [EmailAddress]
+        public string? Email { get; set; }
         public virtual Cart Cart { get; set; }
 
         //foregin key (Many to many)
