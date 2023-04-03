@@ -52,6 +52,84 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Customer.Fname)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Customer.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Customer.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            <dl>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.ApartmentNo)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.ApartmentNo)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.FloorNumber)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.FloorNumber)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.Street)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.Street)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.Zone)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.Zone)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.City)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.City)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.Governorate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.Governorate)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Address.Country)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Address.Country)
+                </dd>
+            </dl>
+        </dd>
+        <dt class="col-sm-2">
+            <label>Products</label>
+        </dt>
+        <dd class="col-sm-10">
+            <table class="text-center">
+                <thead>
+                    <tr>
+                        <th>Product name</th>
+                        <th>Quantity sold</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (ProductOrders po in Model.ProductOrders)
+                    {
+                        <tr>
+                            <td>@po.Product.ProductName</td>
+                            <td>@po.ProductQuantity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
     </dl>
 </div>
 <div>

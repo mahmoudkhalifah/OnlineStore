@@ -32,9 +32,12 @@ namespace OnlineStore.RepoServices
 
         public Order GetDetails(int id)
         {
-
-            return Context.Orders.Where(o => o.OrderId == id).Include(o => o.ProductOrders).ThenInclude(o => o.Product).Include(o => o.Address).Include(o => o.Customer).FirstOrDefault();
-
+            return Context.Orders
+                .Include(o=>o.Address)
+                .Include(o=>o.Customer)
+                .Include(o=>o.ProductOrders)
+                .ThenInclude(po=>po.Product)
+                .FirstOrDefault(o=>o.OrderId == id);
         }
 
         public int Insert(Order order)
@@ -57,6 +60,7 @@ namespace OnlineStore.RepoServices
         {
             
             try
+
             {
                 Order order1 = Context.Orders.Find(id);
 
@@ -74,6 +78,44 @@ namespace OnlineStore.RepoServices
             {
                 return 0;
             }
+        }
+
+        public int UpdateOrderState(int id, OrderState orderState)
+        {
+            try
+            {
+                Context.Orders.Find(id).OrderState = orderState;
+                Context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
+
+        public List<Order> GetFilteredOrders(OrderState? orderState,DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate)
+        {
+
+            List<Order> orders = Context.Orders.ToList();
+            if(orderState != null)
+            {
+                orders = orders.Where(o=>o.OrderState == orderState).ToList();
+            }
+            if(arrivalDate != null)
+            {
+                orders = orders.Where(o => o.ArrivalDate == arrivalDate).ToList();
+            }
+            if (orderDate != null)
+            {
+                orders = orders.Where(o => o.OrderDate == orderDate).ToList();
+            }
+            if (shippingDate != null)
+            {
+                orders = orders.Where(o => o.ShippingDate == shippingDate).ToList();
+            }
+            return orders;
         }
     }
 }

@@ -43,7 +43,11 @@ namespace OnlineStore.RepoServices
         {
             try
             {
+                Cart cart = new Cart();
+                cart.Customer = customer;
+                customer.Cart = cart;
                 Context.Customers.Add(customer);
+              
                 Context.SaveChanges();
                 return 1;
             }

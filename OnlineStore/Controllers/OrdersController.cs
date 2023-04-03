@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿    using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NuGet.Protocol.Core.Types;
@@ -13,9 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace OnlineStore.Controllers
 {
-
-   // [Authorize(Roles = "Admin")]
-
+    //[Authorize(Roles = "Admin")]
     public class OrdersController : Controller
     {
         public IOrderRepository OrderRepository { get; }
@@ -38,6 +36,24 @@ namespace OnlineStore.Controllers
         {
             return View(OrderRepository.GetAll());
         }
+        [HttpPost]
+        public ActionResult Index(OrderState? orderState, DateTime? orderDate, DateTime? arrivalDate, DateTime? shippingDate)
+        {
+            ViewBag.orderState = orderState;
+            ViewBag.orderDate = orderDate;
+            ViewBag.arrivalDate = arrivalDate;
+            ViewBag.shippingDate = shippingDate;
+            return View(OrderRepository.GetFilteredOrders(orderState: orderState,orderDate:orderDate, arrivalDate: arrivalDate, shippingDate: shippingDate));
+
+        }
+        [HttpPost]
+        public ActionResult UpdateOrderState(int id,OrderState orderState)
+        {
+            OrderRepository.UpdateOrderState(id, orderState);
+            return RedirectToAction(nameof(Index));
+
+        }
+        
 
         // GET: OrdersController/Details/5
         public ActionResult Details(int id)
