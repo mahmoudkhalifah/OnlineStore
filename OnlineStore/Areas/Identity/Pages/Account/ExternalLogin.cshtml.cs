@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using OnlineStore.Models;
+using OnlineStore.RepoServices;
 
 namespace OnlineStore.Areas.Identity.Pages.Account
 {
@@ -30,13 +31,15 @@ namespace OnlineStore.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        public ICustomerRepository customerRepo { get; }
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ICustomerRepository custrepo)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -44,6 +47,7 @@ namespace OnlineStore.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            customerRepo = custrepo;
         }
 
         /// <summary>
@@ -78,6 +82,15 @@ namespace OnlineStore.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            public Gender? Gender { get; set; } = Models.Gender.Female;
+
+            [Required]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 11)]
+            [Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; }
+
+
             [Required,StringLength(40)]          
             public string FirstName { get; set; }
             [Required, StringLength(40)]
@@ -159,6 +172,8 @@ namespace OnlineStore.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.Gender = Input.Gender;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -166,6 +181,21 @@ namespace OnlineStore.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
+                    bool female = true;
+                    if (user.Gender.Value == Gender.Male) { female = false; }
+
+                    var role = await _userManager.GetRolesAsync(user);
+                    // Cart cart = new Cart();
+                    var customer = new Customer()
+                    {
+                        Fname = user.FirstName,
+                        Lname = user.LastName,
+                        PhoneNumber = user.PhoneNumber,
+                        Gender = female,
+                        Email = user.Email
+                    };
+                    customerRepo.Insert(customer);
+
                     await _userManager.AddToRoleAsync(user, "User");
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
