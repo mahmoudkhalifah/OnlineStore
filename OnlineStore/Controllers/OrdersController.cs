@@ -125,7 +125,7 @@ namespace OnlineStore.Controllers
                 emptyCart(order.Customer.Cart);
 
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new {id = order.OrderId});
             }
             catch
             {
